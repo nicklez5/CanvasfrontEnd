@@ -11,3 +11,306 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid #333;
+  box-shadow: 0px 0px 15px gray;
+}
+.Header a{
+  color: white;
+}
+.Header a:hover{
+  color: #070616;
+
+}
+.Header, .Footer {
+  width: 100%;
+  background-color: #dc6e7c;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 15.5px;
+  color: white;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12.5px;
+  margin: 0 auto;
+  position: relative;
+  display: inline-block;
+  
+}
+.course:nth-child(1){
+  background-color: #EF4444;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+  color: white;
+}
+.course:nth-child(2){
+  background-color: #18181B;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+}
+.course:nth-child(3){
+  background-color:#3B3B43;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+}
+.course:nth-child(4){
+  background-color: #858594;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+  
+}
+td a{
+  color: white;
+}
+.course{
+  background-color: #8ec1d6;
+}
+
+.course:nth-child(5){
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+  background-color:#D4D4D8;
+  color: black;
+}
+.course:nth-child(6){
+  background-color: #8860EF;
+  color: black;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+  
+}
+.assignments{
+  background-color: #262730;
+  position: relative;
+  border: 1px solid black;
+  padding: 45px;
+  color: white;
+}
+.tests{
+  background-color: #434553;
+  position: relative;
+  border: 1px solid black;
+  padding: 45px;
+  color: white;
+  
+}
+.messages{
+  background-color: #8084A1;
+  position: relative;
+  border: 1px solid black;
+  padding: 45px;
+  color: black;
+}
+.profiles{
+  background-color: #C6CAE6;
+  position: relative;
+  border: 1px solid black;
+  padding: 45px;
+ color: black;
+}
+.home{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: 1px solid black;
+  width: 75px;
+  padding: 30px;
+  align-items:stretch;
+}
+.All_Courses{
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color:#ACECA1;
+  padding: 10px;
+  right: 10px;
+  display: relative;
+  
+  
+}
+.addClass{
+  position:relative;
+  bottom: 135px;
+  left: 545px;
+  border-radius: 10px;
+  margin-left: 20px;
+  padding: 20px;
+  background-color: #171435;
+  color: white;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.removeClass{
+  position:relative;
+  bottom: 135px;
+  left: 945px;
+  border-radius: 10px;
+  margin-left: 20px;
+  padding: 20px;
+  background-color: #171435;
+  color: white;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.Courses{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 45px;
+  padding-bottom: 87vh;
+  
+}
+.addButton{
+  position: relative;
+  bottom: 50px;
+  left: 1000px;
+  margin-left: 20px;
+  background-color: #1B2F33;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 20px;
+  color: white;
+  border-radius: 15px;
+}
+.editButton{
+  display: relative;
+  margin-left: 20px;
+  padding: 10px;
+  background-color:#339989;
+  border-radius: 15px;
+}
+.deleteButton{
+  position: relative;
+  margin-left: 20px;
+  background-color: #D84797;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  color: white;
+  border-radius: 15px;
+}
+.editCourse{
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  background-color: #c2532e;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  
+  color: white;
+  border-radius: 15px;
+}
+.container{
+  padding-bottom: 87vh;
+}
+.container h2{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: 30px;
+}
+.container p{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form-label{
+  font-size: 16px;
+  position: relative;
+}
+.form-label2{
+  font-size: 16px;
+  position: relative;
+  left: 15px;
+}
+.form-control{
+  padding: 10px;
+  margin: 10px;
+}
+.form-control2{
+  padding: 10px;
+  margin-left: 40px;
+}
+.btn{
+  background: #0066A2;
+  color: white;
+  border-style: outset;
+  border-color: #0066A2;
+  height: 50px;
+  width: 75px;
+  font: bold 15px arial,sans-serif;
+  text-shadow: none;
+  margin-left: 145px;
+  margin-top: 25px;
+}
+
+.Home_Courses, .Home_Threads, .Home_Tests, .Home_Settings, .Home_Courses1{
+  border: 1px solid white;
+  position: relative;
+  bottom: 80px;
+  height: 100px;
+  width: 150px;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 60px;
+  grid-template-columns: auto auto auto auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 13px;
+  right: 85vh;
+  
+  background-color:#aaefdf;
+}
+.homecourse{
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  margin-top: 200px;
+  margin-left: 1525px;
+  justify-content: space-between;
+}
+.Home_Courses{
+  background-color: #F59E0B;
+  margin: 0px 25px;
+}
+
+.Home_Threads{
+  background-color: #4747cb;
+  color: white;
+  margin: 0px 25px;
+}
+.Home_Tests{
+  background-color: #3A3A42;
+  color: white;
+  margin: 0px 25px;
+}
+.Home_Settings{
+  background-color: #03012C;
+  color: white;
+  margin: 0px 25px;
+}
+.HomeCourses{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: -355px;
+  margin-top: 15px;
+  height: 120vh;
+  ;
+}
+.Home_Courses1{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: -145px;
+  margin-top: 15px;
+}
