@@ -5,18 +5,29 @@ import { useNavigate,Link } from 'react-router-dom'
 import {api} from "./../api/courses"
 const Home = () => {
   const id = localStorage.getItem("pk")
-  const setCanvasCourses = useStoreActions((actions) => actions.setCanvasCourses)
-  const {data,fetchError,isLoading} = useAxiosFetch(`http://localhost:8000/canvas/detail/${id}/`)
+  const canvas = useStoreState((state) => state.canvasStore.canvas)
+  const { loading, error} = useStoreState((state) => state.canvasStore.loading)
+  const fetchCanvasCourses = useStoreActions((actions) => actions.canvasStore.fetchCanvas)
   useEffect(() => {
-    setCanvasCourses(data.list_courses)
-  },[setCanvasCourses,data.list_courses])
-  
+    const fetchData = async() => {
+      try{
+        const {list_courses, user} =  await fetchCanvasCourses(id)
+        console.log(list_courses)
+      }catch(error) {
+        console.error("Error fetching canvas courses:", error);
+      }
+    }
+     if (id) {
+    fetchData();
+  }
+}, [fetchCanvasCourses, id]);
+    
     return (
         <article className="HomeCourses">
             <main className="homecourse">
             <div className="Home_Courses"><Link to="/UserCourses" state = {{
-                fetchError: fetchError,
-                isLoading: isLoading
+                fetchError: error,
+                isLoading: loading
             }}>Enrolled Courses</Link></div>
             <div className="Home_Tests"><Link to="/Courses"  style={{color: "white"}} >Browse Courses</Link></div>
             <div className="Home_Threads">Threads</div>

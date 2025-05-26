@@ -2,15 +2,20 @@ import { useParams, Link, useLocation} from "react-router-dom"
 import { useNavigate} from "react-router-dom"
 import { useStoreState, useStoreActions} from "easy-peasy"
 import { Table } from "react-bootstrap"
-import { useEffect,useState } from "react"
+import { useEffect,useState, useContext } from "react"
 import useAxiosFetch from '../hooks/useAxiosFetch';
 import {parseISO } from "date-fns"
 import { fr   } from 'date-fns/locale/fr';
 import { format,formatInTimeZone } from 'date-fns-tz';
+
 const CoursePage = () => {
   const {id} = useParams()
-
+  const location = useLocation()
+  const {course} = location.state || {}
   const navigate = useNavigate();
+  const getCoursesById = useStoreState((state) => state.coursesStore.getCoursesById)
+  const courseFromStore = getCoursesById(id)
+  const courseToUse = course || courseFromStore
   const deleteStudent = useStoreActions((actions) => actions.deleteStudent)
   const deleteCourse = useStoreActions((actions) => actions.deleteCourse);
   const deleteMessage = useStoreActions((actions) => actions.deleteMessage);
@@ -19,19 +24,31 @@ const CoursePage = () => {
   const deleteTest = useStoreActions((actions) => actions.deleteTest)
   const deleteThreads = useStoreActions((actions) => actions.deleteThreads)
   const saveAssignment = useStoreActions((actions) => actions.saveAssignment)
-  const addCourse = useStoreActions((actions) => actions.addCourse)
+  const addCourse = useStoreActions((actions) => actions.canvasStore.addCourse)
   const removeCourse = useStoreActions((actions) => actions.removeCourse)
   const curseAssignments = useStoreState((state) => state.courseAssignments)
   const getAssignmentsById = useStoreState((state) => state.getAssignmentsById)
   const editAssignment = useStoreActions((action) => action.editAssignment)
   const setAssignments = useStoreActions((action) => action.getAssignments)
   const assignments = useStoreState((state) => state.assignments)
-  const canvasCourses = useStoreState((state) => state.canvasCourses)
-  const getCoursesById = useStoreState((state) => state.getCoursesById);
-  const courses = getCoursesById(id)
-  let doIhaveIt = canvasCourses.find((course) => course.id === id)
-  const handleDeleteStudent = async([emailID,first_name,last_name,date_of_birth, courseID]) => {
-    deleteStudent([emailID,first_name,last_name,date_of_birth, courseID])
+  const canvasCourses = useStoreState((state) => state.canvasStore.list_courses)
+  const addCanvasCourses = useStoreActions((actions) => actions.canvasStore.addCanvas)
+  
+//   useEffect(()=> {
+//     console.log(id)
+//     console.log(JSON.stringify(window.localStorage.getItem('course')))
+//     const serializedState = JSON.parse(window.localStorage.getItem('course'))
+//     console.log(JSON.stringify(serializedState))
+//     const courses123 = serializedState.filter(obj => (obj.id).toString() === id)
+//     console.log(JSON.stringify(courses123[0]))
+//     //console.log(JSON.stringify(courseState[0]))
+//     if(serializedState){
+//         setCourse(courses123[0])
+//     }
+//   },[setCourse,id])
+  let doIhaveIt = canvasCourses.some((course) => course.id === id)
+  const handleDeleteStudent = async({emailID,firstName,lastName,dob, courseID}) => {
+    deleteStudent([emailID,firstName,lastName,dob, courseID])
     navigate('/home')
   }
   const handleDeleteThread = async([threadID,courseID]) => {
@@ -55,8 +72,9 @@ const CoursePage = () => {
     saveAssignment([courseID, assignmentID])
     navigate('/home')
   }
-  const handleAddCourse = async([courseID]) => {
-    addCourse(courseID)
+  const handleAddCourse = async(courseID) => {
+    const course123 = getCoursesById(courseID)
+    addCanvasCourses(course123)
 
   }
   const handleRemoveCourse = async(courseID) => {
@@ -66,8 +84,7 @@ const CoursePage = () => {
   const date2 = (date) => {
     return formatInTimeZone(date, 'UTC', 'MM/dd/yyyy hh:mm a')
   }
-
-  const courseThreadsMessages = courses.threads.map(message1 => {
+  const courseThreadsMessages = courseToUse.threads.map(message1 => {
             
         return message1.list_messages.map(message => (
                 
@@ -78,7 +95,6 @@ const CoursePage = () => {
                 <td>{message.author}</td>
                 <td>{date2(message.timestamp)}</td>
                 <td><Link to={`/editMessage/${message.id}`}><button className="editButton">Edit Message</button></Link><button className="deleteButton" onClick={() => handleDeleteThread([message.id,message1.id ])}>Delete Message</button></td>
-                <td><Link to={`/addMessage/${message1.thread_id}`}><button className="addButton">Add Message</button></Link></td>
                 </tr>
                 
         ))
@@ -86,7 +102,7 @@ const CoursePage = () => {
     })
     
   
-  const courseTests = courses.tests.map((test) => {
+  const courseTests = courseToUse.tests.map((test) => {
     return (
         <tr className="tests">
         <td>{test.id}</td>
@@ -96,11 +112,10 @@ const CoursePage = () => {
         <td>{test.max_points}</td>
         <td><a href={`http://localhost:8000${test.file}`} target="_blank">{test.file}</a></td>
         <td><Link to={`/editTest/${test.id}`}><button className="editButton">Edit Test</button></Link><button className="deleteButton" onClick={() => handleDeleteTest([test.id,id])}>Delete Test</button></td>
-        <td><Link to={`/addTest/${id}`}><button className="addButton">Add Test</button></Link></td>
         </tr>
     )
   })
-  const courseLectures = courses.lectures.map((lecture) => {
+  const courseLectures = courseToUse.lectures.map((lecture) => {
      return (
      <tr className="lectures">
         <td>{lecture.id}</td>
@@ -108,11 +123,10 @@ const CoursePage = () => {
         <td>{lecture.name}</td>
         <td><a href={`http://localhost:8000${lecture.file}`} target="_blank">{lecture.file}</a></td>
         <td><Link to={`/editCourse/${lecture.id}`}><button className="editButton">Edit Lecture</button></Link><button className="deleteButton" onClick={() => handleDeleteLecture([lecture.id,id])}>Delete Lecture</button></td>
-        <td><Link to={`/addLecture/${id}`}><button className="addButton">Add Lecture</button></Link></td>
     </tr>
     )
   })
-  const courseAssignments = courses.assignments.map((assignment) => {
+  const courseAssignments = courseToUse.assignments.map((assignment) => {
     return(
         <tr className="lectures">
             <td>{assignment.id}</td>
@@ -127,7 +141,7 @@ const CoursePage = () => {
         </tr>
     )
   })
-  const courseProfiles = courses.profiles.map((profile) => {
+  const courseProfiles = courseToUse.profiles.map((profile) => {
     return (
         <tr className="profiles">
             <td>{profile.pk}</td>
@@ -135,19 +149,18 @@ const CoursePage = () => {
             <td>{profile.first_name}</td>
             <td> {profile.last_name}</td>
             <td>{profile.date_of_birth}</td>
-            <td><Link to={`/update/${profile.pk}/`}><button className="editButton">Edit Profile</button></Link><button className="deleteButton" onClick={() => handleDeleteStudent([profile.email,profile.first_name,profile.last_name,profile.date_of_birth,id])}>Remove Student</button></td>
-            <td><Link to={`/courses/student/${id}/`}><button className="addButton">Add Student</button></Link></td>
+            <td><Link to={`/update/${profile.pk}/`}><button className="editButton">Edit Profile</button></Link><button className="deleteButton" onClick={() => handleDeleteStudent({emailID: profile.email, firstName: profile.first_name, lastName: profile.last_name,dob: profile.date_of_birth, courseID: id})}>Remove Student</button></td>
         </tr>
     )
   })
   return (
     <main className="CoursePage">
         <article className="course">
-            { courses && 
+            { courseToUse && 
             <>  
 
-                <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{courses.name}'s Lectures </h2>
-                { doIhaveIt === false ? <><button className="addClass" onClick={() => handleAddCourse(id)}>Add Class</button></> : <button className="removeClass">Remove Class</button>}
+                <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{courseToUse.name}'s Lectures </h2>
+                { doIhaveIt === false ? <button className="addClass" onClick={() => handleAddCourse(courseToUse.id)}>Add Class</button> : <button className="removeClass" onClick={() => handleRemoveCourse(courseToUse.id)}>Remove Class</button>}
                 <Table hover>
                     <thead>
                         <tr>
@@ -163,7 +176,7 @@ const CoursePage = () => {
             </>}
         </article>
         <article className="assignments">
-            { courses && 
+            { courseToUse && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Assignments</h2>
             <Link to={`/addAssignment/${id}`} ><button className="addButton" >Add Assignment</button></Link>
@@ -185,7 +198,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="tests">
-            { courses && 
+            { courseToUse && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Tests</h2>
             <Link to={`/addTest/${id}`} ><button className="addButton" >Add Test</button></Link>
@@ -207,7 +220,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="messages">
-            { courses && 
+            { courseToUse && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Threads</h2>
             <Link to={`/addMessage/${id}`} ><button className="addButton" >Add Message</button></Link>
@@ -229,7 +242,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="profiles">
-            { courses && 
+            { courseToUse && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Students</h2>
             <Link to={`/addStudent/${id}`} ><button className="addButton" >Add Student</button></Link>

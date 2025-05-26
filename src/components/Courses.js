@@ -2,7 +2,7 @@ import React from 'react'
 import CoursesFeed from './CoursesFeed'
 import { useStoreState } from 'easy-peasy'
 const Courses = ({isLoading, fetchError}) => {
-  const coursesResults = useStoreState((state) => state.courses)
+  const coursesResults = useStoreState((state) => state.coursesStore.courses)
   return (
     <>
     <h1 className="All_Courses">All Courses</h1>

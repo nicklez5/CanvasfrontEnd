@@ -38,7 +38,7 @@ const NewAssignment = () => {
         const datetime = formatDate(new Date(assignmentDate))
         const newAssignment = {id: id, name: assignmentName, date_due: datetime , description: assignmentDescription, max_points: assignmentMaxPoints, student_points: assignmentStudentPoints, submitter: assignmentSubmitter , file: assignmentFile}
         saveAssignment([newAssignment,courseID])
-        navigate('/home')
+        navigate(`/courses/${courseID}`)
     }
     return(
         <main className = "NewAssignment">

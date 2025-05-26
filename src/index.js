@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { StoreProvider } from 'easy-peasy';
-import store from './store';
+import store from '../src/interface/model';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

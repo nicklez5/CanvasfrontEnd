@@ -34,10 +34,18 @@ const Course = () => {
     }
   },[course,setEditCourseName,setCoursesAssignments,setCoursesLectures,setCoursesProfiles,setCoursesTests,setCoursesThreads])
   const handleEdit = async(id) => {
-    const updatedCourse = {id, name: editCourseName, assignments: [courseAssignments], lectures: [courseLectures], profiles: [coursesProfiles], tests: [coursesTests], threads:[coursesThreads] }
-    editCourse(updatedCourse)
-    navigate(`/courses/${id}`)
- } 
+    const updatedCourse = {id,
+    name: editCourseName,
+    assignments: courseAssignments,
+    lectures: courseLectures,
+    profiles: coursesProfiles,
+    tests: coursesTests,
+    threads: coursesThreads,
+  }
+   await editCourse(updatedCourse)
+   navigate(`/courses/${id}`)
+} 
+ 
  const handleAssignmentChange = (event) => {
     setCoursesAssignments([event.target.value])
  }  

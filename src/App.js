@@ -13,12 +13,26 @@ import UserCourses from './components/UserCourses';
 import EditAssignment from './components/EditAssignment';
 import NewAssignment from './components/NewAssignment';
 function App() {
-  const setCourses = useStoreActions((actions) => actions.setCourses)
-  const {data, fetchError , isLoading} = useAxiosFetch('http://localhost:8000/courses/')
+   const courses = useStoreState(state => state.coursesStore.courses);
+   const fetchCourses = useStoreActions(actions => actions.coursesStore.fetchCourses);
+  const { loading, error } = useStoreState((state) => state.courseStore)
     useEffect(() => {
-      console.log(data)
-      setCourses(data);
-    },[data,setCourses])
+      const fetchData = async() => {
+        try{
+          const [alphabet] = await fetchCourses()
+          alphabet.forEach(function(item) {
+            console.log(item.id)
+            console.log(item.name)
+          })
+        }catch(error){
+          console.error("Error fetching courses:", error)
+        }
+        if(courses.length === 0){
+          fetchData();
+        }
+      }
+  }, [fetchCourses,courses.length]);
+
   return (
     
     <div className="App">
@@ -28,13 +42,13 @@ function App() {
         <Route exact path="/home" element= {<Home/>} />
         <Route exact path="/Courses" element = {
             <Courses
-              isLoading={isLoading}
-              fetchError={fetchError}
+              isLoading={loading}
+              fetchError={error}
               />} />
           <Route exact path="/UserCourses" element = {
             <UserCourses
-            isLoading={isLoading}
-            fetchError={fetchError}
+            isLoading={loading}
+            fetchError={error}
             />} />
             
         <Route exact path="/postCourse" element={<NewCourse />} />

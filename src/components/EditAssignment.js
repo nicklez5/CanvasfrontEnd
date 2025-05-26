@@ -29,7 +29,7 @@ const EditAssignment = () => {
   const setAssignmentFile = useStoreActions((actions) => actions.setAssignmentFile)
   const getCoursesById = useStoreState((state) => state.getCoursesById)
   const getAssignmentsById = useStoreState((state) => state.getAssignmentsById)
-  const editAssignment = useStoreActions((actions) => actions.editAssignment)
+  const editAssignment = useStoreActions((actions) => actions.assignmentStore.updateAssignment)
   const assignment = getAssignmentsById(id,id2)
   
   useEffect(() => {

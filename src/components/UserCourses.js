@@ -3,7 +3,7 @@ import { useStoreState } from 'easy-peasy'
 import CoursesFeed from './CoursesFeed'
 import { useLocation } from 'react-router-dom'
 const UserCourses = ({isLoading,fetchError}) => {
-  const coursesResults = useStoreState((state) => state.canvasCourses)
+  const coursesResults = useStoreState((state) => state.canvasStore.canvas.list_courses)
   return (
     <>
     <h1 className="All_Courses">Courses</h1>
