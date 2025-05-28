@@ -105,15 +105,12 @@ const courseStore = { course : {
         formData.append("submitter",updatedData.submitter)
         actions.setLoading(true);
         try {
-        const response = await api.post(`/assignments/edit/${id}/`, formData,{headers: {
-            'Authorization':`Token ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data'
-        }})
-        actions.setAssignment(response.data);
+            const response = await api.post(`/assignments/edit/${id}/`, formData)
+            actions.setAssignment(response.data);
         } catch (err) {
-        actions.setError(err.message);
+            actions.setError(err.message);
         } finally {
-        actions.setLoading(false);
+            actions.setLoading(false);
         }
     }),
     updateAssignmentInCourse: action((state, { courseId, updatedAssignment }) => {
@@ -161,79 +158,7 @@ const lectureStore = {
 }
 
 // Your axios instance
-const assignmentStore = { assignment : {
-    id: '',
-    name: '',
-    submitter: '',
-    description: '',
-    date_due : '',
-    file: ''
-},
-  loading: false,
-  error: null,
 
-  // Sets the current assignment object
-  setAssignment: action((state, payload) => {
-    state.assignment = payload;
-  }),
-
-  // Sets loading state
-  setLoading: action((state, payload) => {
-    state.loading = payload;
-  }),
-
-  // Sets error state
-  setError: action((state, payload) => {
-    state.error = payload;
-  }),
-
-  // Fetch assignment by ID from backend
-  fetchAssignment: thunk(async (actions, assignmentID) => {
-    actions.setLoading(true);
-    try {
-      const response = await api.get(`/assignments/detail/${assignmentID}/`, {
-        headers: { Authorization: `Token ${localStorage.getItem('token')}` },
-      });
-      actions.setAssignment(response.data);
-      actions.setError(null);
-    } catch (error) {
-      actions.setError(error.message);
-    } finally {
-      actions.setLoading(false);
-    }
-  }),
-
-  // Optional: Update assignment
-  updateAssignment: thunk(async (actions, { updatedData,id }) => {
-    const formData = new FormData();
-    formData.append("id", updatedData.id)
-    formData.append('file',updatedData.file)
-    formData.append("name",updatedData.name)
-    formData.append("date_due",updatedData.date_due)
-    formData.append("description",updatedData.description)
-    formData.append("max_points",updatedData.max_points)
-    formData.append("student_points",updatedData.student_points)
-    formData.append("submitter",updatedData.submitter)
-    actions.setLoading(true);
-    try {
-      const response = await api.post(`/assignments/edit/${id}/`, formData,{headers: {
-        'Authorization':`Token ${localStorage.getItem('token')}`,
-        'Content-Type': 'multipart/form-data'
-    }})
-      actions.setAssignment(response.data);
-    } catch (err) {
-      actions.setError(err.message);
-    } finally {
-      actions.setLoading(false);
-    }
-  }),
-    setError: action((state, payload) => {
-        state.error = payload;
-    }),
-    setLoading: action((state,payload) => {
-        state.loading = payload
-    })
-}
 const messageStore = { message: {
     id: "",
     author: "",
@@ -303,12 +228,7 @@ const canvasStore = {
     setError: action((state, payload) => {
         state.error = payload;
     }),
-    addCanvas: action((state,payload) => {
-        if(!state.canvas){
-            state.canvas = {list_courses: [], user: null}
-        }
-        state.canvas.list_courses.push(payload)
-    })
+    
 }
 const profileStore = { 
     profile: {
@@ -358,9 +278,8 @@ const threadStore = {
     thread : {
         id: "",
         list_messages: [],
-        last_author: '',
-        last_description: "",
-        last_timestamp: ""
+        title: '',
+        created_at: "",
 
     }, 
     loading: false,
@@ -371,9 +290,8 @@ const threadStore = {
     resetThread: action((state) => {
         state.thread.id = '';
         state.thread.list_messages = [];
-        state.thread.last_author = "";
-        state.thread.last_description = "";
-        state.thread.last_timestamp = ""
+        state.thread.title = "";
+        state.thread.created_at = ""
     }),
     
     deleteThread: thunk(async(actions,threadID) => {
@@ -413,14 +331,13 @@ const threadStore = {
     setError: action((state, payload) => {
         state.error = payload;
     }),
-    addMessages: thunk(async(actions, [...message]) => {
+    addMessages: thunk(async(actions,{threadID,messageBody}) => {
+        const data = {
+            body: messageBody
+        }
         actions.setLoading(true)
         try{
-            const response = await api.delete(`/threads/message/${message[1]}/`,{headers: {
-                'Authorization':`Token ${localStorage.getItem('token')}`
-            },data: {
-                id: message[0]
-            }})
+            const response = await api.post(`/threads/add/${threadID}/messages/`,data)
             actions.setThread(response.data)
             actions.setError(null)
         }catch(err){
@@ -429,14 +346,10 @@ const threadStore = {
             actions.setLoading(false)
         }
     }),
-    deleteMessages: thunk(async(actions, [...array]) => {
+    deleteMessages: thunk(async(actions, [threadID,messageID]) => {
         actions.setLoading(true)
         try{
-            const response = await api.delete(`/threads/message/${array[1]}/`,{headers: {
-                'Authorization':`Token ${localStorage.getItem('token')}`
-            },data: {
-                id: array[0]
-            }})
+            const response = await api.delete(`/threads/delete/${threadID}/messages/${messageID}/`)
             actions.setThread(response.data)
             actions.setError(null)
         }catch(err){
