@@ -11,11 +11,13 @@ import { format,formatInTimeZone } from 'date-fns-tz';
 const CoursePage = () => {
   const {id} = useParams()
   const location = useLocation()
-  const {course} = location.state || {}
+  //const {course} = location.state || {}
   const navigate = useNavigate();
-  const getCoursesById = useStoreState((state) => state.coursesStore.getCoursesById)
-  const courseFromStore = getCoursesById(id)
-  const courseToUse = course || courseFromStore
+  const getCoursesById = useStoreState((state) => state.courseStore.getCoursesById)
+  const courseStoreActions = useStoreActions(actions => actions.courseStore);
+  const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails);
+  const course = useStoreState((state) => state.courseStore.courses[0]);
+  //const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails);
   const deleteStudent = useStoreActions((actions) => actions.deleteStudent)
   const deleteCourse = useStoreActions((actions) => actions.deleteCourse);
   const deleteMessage = useStoreActions((actions) => actions.deleteMessage);
@@ -24,16 +26,18 @@ const CoursePage = () => {
   const deleteTest = useStoreActions((actions) => actions.deleteTest)
   const deleteThreads = useStoreActions((actions) => actions.deleteThreads)
   const saveAssignment = useStoreActions((actions) => actions.saveAssignment)
-  const addCourse = useStoreActions((actions) => actions.canvasStore.addCourse)
   const removeCourse = useStoreActions((actions) => actions.removeCourse)
   const curseAssignments = useStoreState((state) => state.courseAssignments)
   const getAssignmentsById = useStoreState((state) => state.getAssignmentsById)
   const editAssignment = useStoreActions((action) => action.editAssignment)
   const setAssignments = useStoreActions((action) => action.getAssignments)
   const assignments = useStoreState((state) => state.assignments)
-  const canvasCourses = useStoreState((state) => state.canvasStore.list_courses)
-  const addCanvasCourses = useStoreActions((actions) => actions.canvasStore.addCanvas)
-  
+  const canvasCourses = useStoreState((state) => state.userStore.canvas.list_courses)
+  const addCourseToCanvasThunk = useStoreActions((actions) => actions.userStore.addCourseToCanvasThunk)
+  useEffect(() => {
+    // Fetch course details when the component mounts or courseID changes
+    fetchCourseDetails(id);
+  }, [id, fetchCourseDetails]);
 //   useEffect(()=> {
 //     console.log(id)
 //     console.log(JSON.stringify(window.localStorage.getItem('course')))
@@ -47,6 +51,7 @@ const CoursePage = () => {
 //     }
 //   },[setCourse,id])
   let doIhaveIt = canvasCourses.some((course) => course.id === id)
+  
   const handleDeleteStudent = async({emailID,firstName,lastName,dob, courseID}) => {
     deleteStudent([emailID,firstName,lastName,dob, courseID])
     navigate('/home')
@@ -74,7 +79,7 @@ const CoursePage = () => {
   }
   const handleAddCourse = async(courseID) => {
     const course123 = getCoursesById(courseID)
-    addCanvasCourses(course123)
+    addCourseToCanvasThunk(course123)
 
   }
   const handleRemoveCourse = async(courseID) => {
@@ -84,7 +89,7 @@ const CoursePage = () => {
   const date2 = (date) => {
     return formatInTimeZone(date, 'UTC', 'MM/dd/yyyy hh:mm a')
   }
-  const courseThreadsMessages = courseToUse.threads.map(message1 => {
+  const courseThreadsMessages = course.threads.map(message1 => {
             
         return message1.list_messages.map(message => (
                 
@@ -102,7 +107,7 @@ const CoursePage = () => {
     })
     
   
-  const courseTests = courseToUse.tests.map((test) => {
+  const courseTests = course.tests.map((test) => {
     return (
         <tr className="tests">
         <td>{test.id}</td>
@@ -115,7 +120,7 @@ const CoursePage = () => {
         </tr>
     )
   })
-  const courseLectures = courseToUse.lectures.map((lecture) => {
+  const courseLectures = course.lectures.map((lecture) => {
      return (
      <tr className="lectures">
         <td>{lecture.id}</td>
@@ -126,7 +131,7 @@ const CoursePage = () => {
     </tr>
     )
   })
-  const courseAssignments = courseToUse.assignments.map((assignment) => {
+  const courseAssignments = course.assignments.map((assignment) => {
     return(
         <tr className="lectures">
             <td>{assignment.id}</td>
@@ -141,7 +146,7 @@ const CoursePage = () => {
         </tr>
     )
   })
-  const courseProfiles = courseToUse.profiles.map((profile) => {
+  const courseProfiles = course.profiles.map((profile) => {
     return (
         <tr className="profiles">
             <td>{profile.pk}</td>
@@ -156,11 +161,12 @@ const CoursePage = () => {
   return (
     <main className="CoursePage">
         <article className="course">
-            { courseToUse && 
+            { course && 
             <>  
 
-                <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{courseToUse.name}'s Lectures </h2>
-                { doIhaveIt === false ? <button className="addClass" onClick={() => handleAddCourse(courseToUse.id)}>Add Class</button> : <button className="removeClass" onClick={() => handleRemoveCourse(courseToUse.id)}>Remove Class</button>}
+                <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name}'s Lectures </h2>
+                { doIhaveIt === false ? <button className="addClass" onClick={() => handleAddCourse(course.id)}>Add Class</button> : <button className="removeClass" onClick={() => handleRemoveCourse(course.id)}>Remove Class</button>}
+                <Link to={`/addLecture/${id}`} ><button className="addButton" >Add Lecture</button></Link>
                 <Table hover>
                     <thead>
                         <tr>
@@ -176,7 +182,7 @@ const CoursePage = () => {
             </>}
         </article>
         <article className="assignments">
-            { courseToUse && 
+            { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Assignments</h2>
             <Link to={`/addAssignment/${id}`} ><button className="addButton" >Add Assignment</button></Link>
@@ -198,7 +204,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="tests">
-            { courseToUse && 
+            { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Tests</h2>
             <Link to={`/addTest/${id}`} ><button className="addButton" >Add Test</button></Link>
@@ -220,7 +226,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="messages">
-            { courseToUse && 
+            { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Threads</h2>
             <Link to={`/addMessage/${id}`} ><button className="addButton" >Add Message</button></Link>
@@ -242,7 +248,7 @@ const CoursePage = () => {
             }
         </article>
         <article className="profiles">
-            { courseToUse && 
+            { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Students</h2>
             <Link to={`/addStudent/${id}`} ><button className="addButton" >Add Student</button></Link>

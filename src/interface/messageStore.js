@@ -40,7 +40,7 @@ export const messageStore = { message: {
         actions.setLoading(true);
         try {
             const response = await api.post(`/threads/${threadId}/messages/`, messageData);
-
+            actions.setMessage(response.data)
             // Add the message to the thread in the course's state
             courseStoreActions.addMessageToThread({
                 courseId: courseId,
@@ -62,7 +62,7 @@ export const messageStore = { message: {
         actions.setLoading(true);
         try {
             const response = await api.put(`/threads/${threadId}/messages/${messageId}/`, data);
-
+            actions.setMessage(response.data)
             // Update the message in the thread within the course state
             courseStoreActions.updateMessageInThread({
                 courseId: courseId,
@@ -82,7 +82,7 @@ export const messageStore = { message: {
         actions.setLoading(true);
         try {
             await api.delete(`/threads/${threadId}/messages/${messageId}/`);
-
+            actions.setMessage({})
             // Remove the message from the thread in the course state
             courseStoreActions.removeMessageFromThread({
                 courseId: courseId,

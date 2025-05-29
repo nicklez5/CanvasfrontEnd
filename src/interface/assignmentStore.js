@@ -53,7 +53,7 @@ export const assignmentStore = { assignment : {
       try {
           // Step 1: Submit the assignment file (PUT request to backend)
           const response = await api.put(`/assignments/submit/${assignmentID}/`, formData);
-  
+          actions.setAssignment(response.data)
           // Step 3: Update the frontend state (update the assignment in the course’s assignments)
           courseStoreActions.updateAssignmentInCourse({
               courseId: courseID,
@@ -68,7 +68,7 @@ export const assignmentStore = { assignment : {
       }
   }),
   // Optional: Update assignment
-  updateAssignment: thunk(async (actions, { updatedData,id , courseStoreActions }) => {
+  updateAssignment: thunk(async (actions, { updatedData,course_id , courseStoreActions }) => {
     const formData = new FormData();
     formData.append('assignment_file',updatedData.assignment_file)
     formData.append("name",updatedData.name)
@@ -81,7 +81,7 @@ export const assignmentStore = { assignment : {
       const response = await api.put(`/assignments/update/${updatedData.id}/`, formData)
       actions.setAssignment(response.data);
       courseStoreActions.updateAssignmentInCourse({
-        courseId: id,   // Pass course_id to ensure it updates the correct course
+        courseId: course_id,   // Pass course_id to ensure it updates the correct course
         updatedAssignment: response.data,
     });
       actions.setError(null);
@@ -101,13 +101,16 @@ export const assignmentStore = { assignment : {
     actions.setLoading(true);
     try {
       const response = await api.post(`/assignments/post/`, formData)
-      actions.setAssignment(response.data);
-      const addToCourseFormData = new FormData();
-      addToCourseFormData.append('id', response.data.id);
-      await api.post(`/courses/assignments/${id}/`, addToCourseFormData);
+      const assignment = response?.data;
+      if (!assignment?.id) throw new Error("Assignment creation failed: No ID returned");
+      actions.setAssignment(assignment); // Update the store with the created assignment
+      // Step 2: Link the assignment to the course
+      // Here we send a simple JSON object to link the assignment to the course
+      const linkData = { id: assignment.id };  // Use JSON instead of FormData
+      await api.post(`/courses/assignments/${id}/`, linkData);
       courseStoreActions.addAssignmentInCourse({
-         courseID: id,
-         updatedAssignment: response.data
+         courseId : id,
+         updatedAssignment: assignment
       })
       actions.setError(null);
     } catch (err) {
@@ -123,9 +126,6 @@ export const assignmentStore = { assignment : {
       actions.setAssignment({});
        // Reset the assignment state after deletion
 
-      const removeToCourseFormData = new FormData();
-      removeToCourseFormData.append('id', assignmentID);
-      await api.patch(`/courses/assignments/${id}/`, removeToCourseFormData);
       courseStoreActions.removeAssignmentFromCourse({
          courseId: id,
          assignmentId: assignmentID

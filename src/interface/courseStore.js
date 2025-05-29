@@ -6,13 +6,27 @@ export const courseStore = {
     courses: [],
     loading: false,
     error: null,
-    addCourse: action((state,course123) => {
-        state.courses.push(course123)
+    addCourse: action((state, course123) => {
+        state.courses = [...state.courses, course123];  // Immutable push
     }),
     deleteCourse: action((state,courseID) => {
         state.courses = state.courses.filter(a => a.id !== courseID)
     }),
     coursesCount: computed((state) => state.courses.length),
+    createCourse: thunk(async (actions, courseData) => {
+        actions.setLoading(true);
+        try {
+        // Make an API call to create the course
+        const response = await api.post('/courses/post/', courseData); // Endpoint to create a course
+        actions.addCourse(response.data); // Add the newly created course to the store
+        actions.setError(null); // Reset error state
+        } catch (error) {
+        actions.setError(error.message); // Set error message
+        } finally {
+        actions.setLoading(false); // Reset loading state
+        }
+    }),
+
     fetchCourses: thunk(async(actions) => {
         actions.setLoading(true);
         try {
@@ -35,242 +49,276 @@ export const courseStore = {
             actions.setLoading(false);  // Turn off the loading state
         }
     }),
-    getCoursesById: computed ((state) => {
-        return(id) => 
-             state.courses.find(course => (course.id).toString() === id);
+    getCoursesById: computed((state) => {
+    // This uses a more efficient approach by indexing courses by their id
+        const coursesById = state.courses.reduce((acc, course) => {
+        acc[course.id] = course;
+        return acc;
+        }, {});
+        return (id) => coursesById[id];
     }),
     setCourses: action((state,payload) => {
         state.courses = payload
     }),
-    setAssignmentsForCourse: action((state,payload) => {
-        state.assignments = payload
-    }),
-    setLecturesForCourse: action((state,payload) => {
-        state.lectures = payload
-    }),
-    setTestsForCourse: action((state,payload) => {
-        state.tests = payload
-    }),
-    setProfilesForCourse: action((state,payload) => {
-        state.profiles = payload
-    }),
-    setThreadsForCourse: action((state,payload) => {
-        state.threads = payload
-    }),
     addTestInCourse: action((state, { courseId, updatedTest }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    
-    // Check if the course exists
-        if (courseIndex !== -1) {
-            // Check if the test is already in the array to avoid duplicates
-            const testExists = state.courses[courseIndex].tests.some(
-                test => test.id === updatedTest.id
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            if (!testExists) {
-                // Add the updated test only if it's not already in the tests array
-                state.courses[courseIndex].tests.push(updatedTest);
-            }
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Check if the test is already in the array to avoid duplicates
+        const testExists = state.courses[courseIndex].tests.some(test => test.id === updatedTest.id);
+
+        if (!testExists) {
+            // Immutably update only the tests array of the selected course
+            state.courses = state.courses.map((course, index) => {
+                if (index === courseIndex) {
+                    return {
+                        ...course,  // Copy the existing course object
+                        tests: [...course.tests, updatedTest]  // Add the new test immutably
+                    };
+                }
+                return course;  // Return the other courses unchanged
+            });
         }
+    }
     }),
     removeTestFromCourse: action((state, { courseId, testId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the index of the test to remove
-            const testIndex = state.courses[courseIndex].tests.findIndex(
-            test => test.id === testId
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            // If the test is found, remove it from the array
-            if (testIndex !== -1) {
-            state.courses[courseIndex].tests.splice(testIndex, 1);
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Use map to create a new array of courses
+        state.courses = state.courses.map((course, index) => {
+            if (index === courseIndex) {
+                // Immutably remove the test by filtering the tests array
+                return {
+                    ...course,  // Copy the existing course object
+                    tests: course.tests.filter(test => test.id !== testId)  // Remove the test with the specified testId
+                };
             }
-        }
+            return course;  // Return the other courses unchanged
+        });
+    }
     }),
     addAssignmentInCourse: action((state, { courseId, updatedAssignment }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    
-    // Check if the course exists
-        if (courseIndex !== -1) {
-            // Check if the assignment is already in the array to avoid duplicates
-            const assignmentExists = state.courses[courseIndex].assignments.some(
-                assignment => assignment.id === updatedAssignment.id
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            if (!assignmentExists) {
-                // Add the updated assignment only if it's not already in the assignments array
-                state.courses[courseIndex].assignments.push(updatedAssignment);
-            }
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Check if the assignment is already in the array to avoid duplicates
+        const assignmentExists = state.courses[courseIndex].assignments.some(assignment => assignment.id === updatedAssignment.id);
+
+        if (!assignmentExists) {
+            // Immutably update only the assignments array of the selected course
+            state.courses = state.courses.map((course, index) => {
+                if (index === courseIndex) {
+                    return {
+                        ...course,  // Copy the existing course object
+                        assignments: [...course.assignments, updatedAssignment]  // Add the new test immutably
+                    };
+                }
+                return course;  // Return the other courses unchanged
+            });
         }
+    }
     }),
     removeAssignmentFromCourse: action((state, { courseId, assignmentId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the index of the assignment to remove
-            const assignmentIndex = state.courses[courseIndex].assignments.findIndex(
-            assignment => assignment.id === assignmentId
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            // If the assignment is found, remove it from the array
-            if (assignmentIndex !== -1) {
-            state.courses[courseIndex].assignments.splice(assignmentIndex, 1);
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Use map to create a new array of courses
+        state.courses = state.courses.map((course, index) => {
+            if (index === courseIndex) {
+                // Immutably remove the assignment by filtering the assignments array
+                return {
+                    ...course,  // Copy the existing course object
+                    assignments: course.assignments.filter(assignment => assignment.id !== assignmentId)  // Remove the assignment with the specified assignmentId
+                };
             }
-        }
+            return course;  // Return the other courses unchanged
+        });
+    }
     }),
     addThreadInCourse: action((state, { courseId, updatedThread }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    
-    // Check if the course exists
-        if (courseIndex !== -1) {
-            // Check if the thread is already in the array to avoid duplicates
-            const threadExists = state.courses[courseIndex].threads.some(
-                thread => thread.id === updatedThread.id
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            if (!threadExists) {
-                // Add the updated thread only if it's not already in the threads array
-                state.courses[courseIndex].threads.push(updatedThread);
-            }
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Check if the thread is already in the array to avoid duplicates
+        const threadExists = state.courses[courseIndex].threads.some(thread => thread.id === updatedThread.id);
+
+        if (!threadExists) {
+            // Immutably update only the threads array of the selected course
+            state.courses = state.courses.map((course, index) => {
+                if (index === courseIndex) {
+                    return {
+                        ...course,  // Copy the existing course object
+                        threads: [...course.threads, updatedThread]  // Add the new test immutably
+                    };
+                }
+                return course;  // Return the other courses unchanged
+            });
         }
+    }
     }),
     removeThreadFromCourse: action((state, { courseId, threadId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the index of the thread to remove
-            const threadIndex = state.courses[courseIndex].threads.findIndex(
-            thread => thread.id === threadId
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            // If the thread is found, remove it from the array
-            if (threadIndex !== -1) {
-            state.courses[courseIndex].threads.splice(threadIndex, 1);
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Use map to create a new array of courses
+        state.courses = state.courses.map((course, index) => {
+            if (index === courseIndex) {
+                // Immutably remove the thread by filtering the threads array
+                return {
+                    ...course,  // Copy the existing course object
+                    threads: course.threads.filter(thread => thread.id !== threadId)  // Remove the assignment with the specified assignmentId
+                };
             }
-        }
+            return course;  // Return the other courses unchanged
+        });
+    }
     }),
     addMessageToThread: action((state, { courseId, threadId, message }) => {
     // Find the course by courseId
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the thread by threadId
-            const threadIndex = state.courses[courseIndex].threads.findIndex(
-                thread => thread.id === threadId
-            );
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            if (threadIndex !== -1) {
-                // Add the new message to the thread's messages list
-                state.courses[courseIndex].threads[threadIndex].messages.push(message);
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Use map to create a new array of courses
+        state.courses = state.courses.map((course, index) => {
+            if (index === courseIndex) {
+                // If the course matches, update the threads
+                return {
+                    ...course,  // Copy the existing course object
+                    threads: course.threads.map((thread) => {
+                        if (thread.id === threadId) {
+                            // If the thread matches, add the new message to the messages array
+                            return {
+                                ...thread,  // Copy the thread object
+                                messages: [...thread.messages, message]  // Add the new message to the thread
+                            };
+                        }
+                        return thread;  // Return the thread unchanged
+                    })
+                };
             }
-        }
+            return course;  // Return the course unchanged
+        });
+    }
     }),
     updateMessageInThread: action((state, { courseId, threadId, messageId, updatedMessage }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        if (courseIndex !== -1) {
-            const threadIndex = state.courses[courseIndex].threads.findIndex(
-                thread => thread.id === threadId
-            );
-            if (threadIndex !== -1) {
-                const messageIndex = state.courses[courseIndex].threads[threadIndex].messages.findIndex(
-                    message => message.id === messageId
-                );
-                if (messageIndex !== -1) {
-                    state.courses[courseIndex].threads[threadIndex].messages[messageIndex] = updatedMessage;
-                }
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
+
+    if (courseIndex !== -1) {
+        state.courses = state.courses.map(course => {
+            if (course.id === courseId) {
+                // Update the threads of the course
+                return {
+                    ...course,
+                    threads: course.threads.map(thread => {
+                        if (thread.id === threadId) {
+                            // Update the messages in the thread
+                            return {
+                                ...thread,
+                                messages: thread.messages.map(message => {
+                                    if (message.id === messageId) {
+                                        // Update the message
+                                        return updatedMessage;
+                                    }
+                                    return message;
+                                })
+                            };
+                        }
+                        return thread;
+                    })
+                };
             }
-        }
+            return course;
+        });
+    }
     }),
     removeMessageFromThread: action((state, { courseId, threadId, messageId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        if (courseIndex !== -1) {
-            const threadIndex = state.courses[courseIndex].threads.findIndex(
-                thread => thread.id === threadId
-            );
-            if (threadIndex !== -1) {
-                const messageIndex = state.courses[courseIndex].threads[threadIndex].messages.findIndex(
-                    message => message.id === messageId
-                );
-                if (messageIndex !== -1) {
-                    state.courses[courseIndex].threads[threadIndex].messages.splice(messageIndex, 1);
-                }
-            }
+    // Update the courses array immutably
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the threads array immutably
+            return {
+                ...course,
+                threads: course.threads.map(thread => {
+                    if (thread.id === threadId) {
+                        // Update the messages array immutably
+                        return {
+                            ...thread,
+                            messages: thread.messages.filter(message => message.id !== messageId)  // Remove the message with the specified messageId
+                        };
+                    }
+                    return thread;  // Return thread unchanged if it doesn't match threadId
+                })
+            };
         }
+        return course;  // Return course unchanged if it doesn't match courseId
+    });
     }),
-    addProfileInCourse: action((state, { courseId, updatedProfile }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
     
-    // Check if the course exists
-        if (courseIndex !== -1) {
-            // Check if the profile is already in the array to avoid duplicates
-            const profileExists = state.courses[courseIndex].profiles.some(
-                profile => profile.id === updatedProfile.id
-            );
-
-            if (!profileExists) {
-                // Add the updated profile only if it's not already in the profiles array
-                state.courses[courseIndex].profiles.push(updatedProfile);
-            }
-        }
-    }),
-    removeProfileFromCourse: action((state, { courseId, profileId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the index of the profile to remove
-            const profileIndex = state.courses[courseIndex].profiles.findIndex(
-            profile => profile.id === profileId
-            );
-
-            // If the profile is found, remove it from the array
-            if (profileIndex !== -1) {
-            state.courses[courseIndex].profiles.splice(profileIndex, 1);
-            }
-        }
-    }),
     addLectureInCourse: action((state, { courseId, updatedLecture }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    
-    // Check if the course exists
-        if (courseIndex !== -1) {
-            // Check if the lecture is already in the array to avoid duplicates
-            const lectureExists = state.courses[courseIndex].lectures.some(
-                lecture => lecture.id === updatedLecture.id
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            if (!lectureExists) {
-                // Add the updated lecture only if it's not already in the lectures array
-                state.courses[courseIndex].lectures.push(updatedLecture);
-            }
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Check if the lecture is already in the array to avoid duplicates
+        const lectureExists = state.courses[courseIndex].lectures.some(lecture => lecture.id === updatedLecture.id);
+
+        if (!lectureExists) {
+            // Immutably update only the lectures array of the selected course
+            state.courses = state.courses.map((course, index) => {
+                if (index === courseIndex) {
+                    return {
+                        ...course,  // Copy the existing course object
+                        lectures: [...course.lectures, updatedLecture]  // Add the new test immutably
+                    };
+                }
+                return course;  // Return the other courses unchanged
+            });
         }
+    }
     }),
     removeLectureFromCourse: action((state, { courseId, lectureId }) => {
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        
-        if (courseIndex !== -1) {
-            // Find the index of the lecture to remove
-            const lectureIndex = state.courses[courseIndex].lectures.findIndex(
-            lecture => lecture.id === lectureId
-            );
+    // Find the course by courseId
+    const courseIndex = state.courses.findIndex(course => course.id === courseId);
 
-            // If the lecture is found, remove it from the array
-            if (lectureIndex !== -1) {
-            state.courses[courseIndex].lectures.splice(lectureIndex, 1);
+    // If the course exists
+    if (courseIndex !== -1) {
+        // Use map to create a new array of courses
+        state.courses = state.courses.map((course, index) => {
+            if (index === courseIndex) {
+                // Immutably remove the lecture by filtering the lectures array
+                return {
+                    ...course,  // Copy the existing course object
+                    lectures: course.lectures.filter(lecture => lecture.id !== lectureId)  // Remove the test with the specified testId
+                };
             }
-        }
+            return course;  // Return the other courses unchanged
+        });
+    }
     }),
     setCourseDetails: action((state, { courseId, updatedCourseData }) => {
-    // Find the index of the course in the courses array
-        const courseIndex = state.courses.findIndex(course => course.id === courseId);
-
-        // If the course is found, update the course details
-        if (courseIndex !== -1) {
-            state.courses[courseIndex] = {
-            ...state.courses[courseIndex],  // Retain existing course data
-            ...updatedCourseData,           // Update with the new data (assignments, lectures, etc.)
-            };
-    }
+    // Use map to create a new courses array with the updated course
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Return the updated course by merging the existing course data with the new data
+            return { ...course, ...updatedCourseData };
+        }
+        return course;  // If the course doesn't match, return it unchanged
+    });
     }),
     updateCourse: action((state, { courseId, updatedCourse }) => {
     const courseIndex = state.courses.findIndex(course => course.id === courseId);
@@ -288,14 +336,18 @@ export const courseStore = {
             const response = await api.get(`/courses/detail/${courseId}/`);
             
             const { course, assignments, lectures, tests, profiles, threads } = response.data;
-
+            const updatedCourse = {
+                ...course,               // Copy the course data
+                assignments,             // Add assignments to the course
+                lectures,                // Add lectures to the course
+                tests,                   // Add tests to the course
+                profiles,                // Add profiles to the course
+                threads,                 // Add threads to the course
+            };
             // Update the store with the fetched data
-            actions.setCourses([course]);           // Set the course information
-            actions.setAssignmentsForCourse(assignments);  // Set assignments for the course
-            actions.setLecturesForCourse(lectures);  // Set lectures for the course
-            actions.setTestsForCourse(tests);       // Set tests for the course
-            actions.setProfilesForCourse(profiles); // Set profiles for the course
-            actions.setThreadsForCourse(threads);   // Set threads for the course
+             actions.setCourses([updatedCourse]);  // Set the updated course information in the courses array
+
+              // Set threads for the course
 
             actions.setError(null);  // Reset any previous errors
         } catch (error) {
@@ -313,79 +365,132 @@ export const courseStore = {
     setError: action((state, payload) => {
         state.error = payload;
     }),
-    updateCourseName: thunk(async (actions, {course_id , newCourseName}, helpers) => {
-        const data = {
-            name: newCourseName
-        }
-        actions.setLoading(true)
-        try{
-            const response = await api.put(`/courses/update/${course_id}/`, data);
+    updateCourseName: thunk(async (actions, { course_id, newCourseName }, helpers) => {
+    const course = helpers.getState().courseStore.courses.find(c => c.id === course_id);  // Get the current course from state
+
+    // If the course doesn't exist, log an error and exit
+    if (!course) {
+        actions.setError('Course not found!');
+        return;
+    }
+
+    // Prepare the data to send to the API
+    const data = { name: newCourseName };
+
+    actions.setLoading(true);  // Set loading to true
+
+    try {
+        // Optimistically update the course name in the store
+        actions.updateCourse({
+            courseId: course_id,
+            updatedCourse: { ...course, name: newCourseName }
+        });
+
+        // Make the API call to update the course name
+        const response = await api.put(`/courses/update/${course_id}/`, data);
+
+        // If the response is successful, update the course with the data returned from the API
+        if (response.status === 200) {
             actions.updateCourse({
-                courseId: course_id, 
-                updatedCourse: response.data,
+                courseId: course_id,
+                updatedCourse: response.data
             });
-        }catch(err){
-            console.log(`Error: ${err.message}`)
-        }finally{
-            actions.setLoading(false)
+            actions.setError(null);  // Clear any previous errors
+        } else {
+            // Handle unexpected API response
+            throw new Error(`Unexpected response status: ${response.status}`);
         }
-        }),
+
+    } catch (err) {
+        // Log the error and update the error state
+        console.log(`Error: ${err.message}`);
+        actions.setError(err.message);  // Store the error message in the state
+
+        // Optionally revert the course name back if the update fails
+        actions.updateCourse({
+            courseId: course_id,
+            updatedCourse: course  // Revert the course to its original state
+        });
+    } finally {
+        actions.setLoading(false);  // Set loading to false
+    }
+}),
+
     // Optional: Update assignment
     
     updateAssignmentInCourse: action((state, { courseId, updatedAssignment }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    if (courseIndex !== -1) {
-        const assignmentIndex = state.courses[courseIndex].assignments.findIndex(
-            a => a.id === updatedAssignment.id
-        );
-        if (assignmentIndex !== -1) {
-            state.courses[courseIndex].assignments[assignmentIndex] = updatedAssignment;
+    // Use map to create a new courses array with the updated assignment
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the assignments array by mapping over it
+            return {
+                ...course,  // Copy the existing course object
+                assignments: course.assignments.map(assignment => 
+                    assignment.id === updatedAssignment.id ? updatedAssignment : assignment
+                )  // Replace the updated assignment
+            };
         }
-    }
-   }),    
-    updateTestsInCourse: action((state, { courseId, updatedTest }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    if (courseIndex !== -1) {
-        const testIndex = state.courses[courseIndex].tests.findIndex(
-            a => a.id === updatedTest.id
-        );
-        if (testIndex !== -1) {
-            state.courses[courseIndex].tests[testIndex] = updatedTest;
+        return course;  // Return the course unchanged if it doesn't match courseId
+    });
+    }),  
+    updateThreadInCourse: action((state, { courseId, updatedThread }) => {
+    // Use map to create a new courses array with the updated thread
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the threads array by mapping over it
+            return {
+                ...course,  // Copy the existing course object
+                threads: course.threads.map(thread => 
+                    thread.id === updatedThread.id ? updatedThread : thread
+                )  // Replace the updated thread
+            };
         }
-    }
-   }),
-    updateProfilesInCourse: action((state, { courseId, updatedProfile }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    if (courseIndex !== -1) {
-        const testIndex = state.courses[courseIndex].profiles.findIndex(
-            a => a.id === updatedProfile.id
-        );
-        if (testIndex !== -1) {
-            state.courses[courseIndex].profiles[testIndex] = updatedProfile;
+        return course;  // Return the course unchanged if it doesn't match courseId
+    });
+}),
+    updateProfileInCourse: action((state, { courseId, updatedProfile }) => {
+    // Use map to create a new courses array with the updated profile
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the profiles array by mapping over it
+            return {
+                ...course,  // Copy the existing course object
+                profiles: course.profiles.map(profile => 
+                    profile.id === updatedProfile.id ? updatedProfile : profile
+                )  // Replace the updated profile
+            };
         }
-    }
-
-    }),
-    updateLecturesInCourse: action((state, { courseId, updatedLecture }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    if (courseIndex !== -1) {
-        const lectureIndex = state.courses[courseIndex].lectures.findIndex(
-            a => a.id === updatedLecture.id
-        );
-        if (lectureIndex !== -1) {
-            state.courses[courseIndex].lectures[lectureIndex] = updatedLecture;
+        return course;  // Return the course unchanged if it doesn't match courseId
+    });
+}),
+    updateLectureInCourse: action((state, { courseId, updatedLecture }) => {
+    // Use map to create a new courses array with the updated lecture
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the lectures array by mapping over it
+            return {
+                ...course,  // Copy the existing course object
+                lectures: course.lectures.map(lecture => 
+                    lecture.id === updatedLecture.id ? updatedLecture : lecture
+                )  // Replace the updated lecture
+            };
         }
-    }
-   }), 
-   updateThreadsInCourse: action((state, { courseId, updatedThread }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-    if (courseIndex !== -1) {
-        const threadIndex = state.courses[courseIndex].threads.findIndex(
-            a => a.id === updatedThread.id
-        );
-        if (threadIndex !== -1) {
-            state.courses[courseIndex].threads[threadIndex] = updatedThread;
+        return course;  // Return the course unchanged if it doesn't match courseId
+    });
+}),
+   updateTestInCourse: action((state, { courseId, updatedTest }) => {
+    // Use map to create a new courses array with the updated test
+    state.courses = state.courses.map(course => {
+        if (course.id === courseId) {
+            // Update the tests array by mapping over it
+            return {
+                ...course,  // Copy the existing course object
+                tests: course.tests.map(test => 
+                    test.id === updatedTest.id ? updatedTest : test
+                )  // Replace the updated test
+            };
         }
-    }
-   }),
+        return course;  // Return the course unchanged if it doesn't match courseId
+    });
+}),
 }

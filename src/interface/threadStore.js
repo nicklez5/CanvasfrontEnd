@@ -15,27 +15,17 @@ export const threadStore = {
         state.thread = payload
     }),
     
-    resetThread: action((state) => {
-        state.thread = {
-            id: '',            // Reset to null if you prefer null instead of empty string
-            list_messages: [],   // Reset messages to an empty array
-            title: '',         // Reset title to null (or empty string "")
-            created_at: ''     // Reset created_at to null
-        };
-    }),
+ 
     deleteThread: thunk(async(actions,{id, threadID,courseStoreActions}) => {
         actions.setLoading(true)
         try{
             const response = await api.delete(`/threads/delete/${threadID}/`)
             if(response.data["message"] === "Thread deleted successfully."){
-                const removeToCourseFormData = new FormData();
-                removeToCourseFormData.append('id', threadID);
-                await api.patch(`/courses/threads/${id}/`, removeToCourseFormData);
                 courseStoreActions.removeThreadFromCourse({
                     courseId: id,
                     threadId: threadID
                 })
-                actions.resetThread()
+                actions.setThread({})
                 actions.setError(null)
             }
         }catch(error){
@@ -60,6 +50,24 @@ export const threadStore = {
             })
             actions.setError(null)
             
+        }catch(error){
+            actions.setError(error.message)
+        }finally{
+            actions.setLoading(false)
+        }
+    }),
+    updateThread: thunk(async(actions, {updatedData, course_id, courseStoreActions}) => {
+        const formData = new FormData()
+        formData.append("title",updatedData.title)
+        actions.setLoading(true);
+        try{
+            const response = await api.put(`/threads/update/${updatedData.id}/`,formData)
+            actions.setThread(response.data)
+            courseStoreActions.updateThreadInCourse({
+                course_id,
+                updatedThread: response.data
+            })
+            actions.setError(null)
         }catch(error){
             actions.setError(error.message)
         }finally{

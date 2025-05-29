@@ -12,26 +12,13 @@ import Home from './components/Home';
 import UserCourses from './components/UserCourses';
 import EditAssignment from './components/EditAssignment';
 import NewAssignment from './components/NewAssignment';
+import NewLecture from './components/NewLecture';
 function App() {
-   const courses = useStoreState(state => state.coursesStore.courses);
-   const fetchCourses = useStoreActions(actions => actions.coursesStore.fetchCourses);
+   const fetchCourses = useStoreActions(actions => actions.courseStore.fetchCourses);
   const { loading, error } = useStoreState((state) => state.courseStore)
     useEffect(() => {
-      const fetchData = async() => {
-        try{
-          const [alphabet] = await fetchCourses()
-          alphabet.forEach(function(item) {
-            console.log(item.id)
-            console.log(item.name)
-          })
-        }catch(error){
-          console.error("Error fetching courses:", error)
-        }
-        if(courses.length === 0){
-          fetchData();
-        }
-      }
-  }, [fetchCourses,courses.length]);
+      fetchCourses()
+  }, [fetchCourses]);
 
   return (
     
@@ -56,7 +43,7 @@ function App() {
         <Route  path="/editCourse/:id" element={<EditCourse />}/>
         <Route exact path="/courses/:id"  element={<CoursePage  />}/>
         <Route path="/editCourse/:id/Assignment/:id2" element = {<EditAssignment/>}/>
-        
+        <Route exact path="/addLecture/:courseID" element={<NewLecture />} />
       </Routes>
     </div>
   );

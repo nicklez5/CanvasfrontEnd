@@ -70,8 +70,7 @@ export const testStore = { test : {
   // Optional: Update assignment
   updateTest: thunk(async (actions, { updatedData, id , courseStoreActions }) => {
     const formData = new FormData();
-    formData.append("id", updatedData.id)
-    formData.append('file',updatedData.file)
+    formData.append('file', updatedData.file);
     formData.append("name",updatedData.name)
     formData.append("date_due",updatedData.date_due)
     formData.append("description",updatedData.description)
@@ -124,9 +123,6 @@ export const testStore = { test : {
       actions.setTests({});
        // Reset the test state after deletion
        
-      const removeToCourseFormData = new FormData();
-      removeToCourseFormData.append('id', testID);
-      await api.patch(`/courses/tests/${id}/`, removeToCourseFormData);
       courseStoreActions.removeTestFromCourse({
          courseId: id,
          testId: testID

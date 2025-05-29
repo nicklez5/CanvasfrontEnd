@@ -52,29 +52,36 @@ export const lectureStore = { lecture : {
             actions.setLoading(false);
         }
     }),
-    createLecture: thunk(async(actions,{LectureData, id, courseStoreActions} ) => {
+    createLecture: thunk(async (actions, { LectureData, id, courseStoreActions }) => {
         const formData = new FormData();
-        formData.append('file',LectureData.file)
-        formData.append("name",LectureData.name)
-        formData.append("description",LectureData.description)
+        formData.append('file', LectureData.file);
+        formData.append('name', LectureData.name);
+        formData.append('description', LectureData.description);
+
         actions.setLoading(true);
         try {
-            const response = await api.post(`/lectures/post/`, formData)
-            actions.setLecture(response.data);
-            const addToCourseFormData = new FormData();
-            addToCourseFormData.append('id', response.data.id);
-            await api.post(`/courses/lectures/${id}/`, addToCourseFormData);
+            const response = await api.post(`/lectures/post/`, formData);
+            const lecture = response?.data;
+            if (!lecture?.id) throw new Error("Lecture creation failed: No ID returned");
+
+            actions.setLecture(lecture);
+
+            const linkData = { id: lecture.id };
+            await api.post(`/courses/lectures/${id}/`, linkData);
+
             courseStoreActions.addLectureInCourse({
-                courseID: id,
-                updatedLecture: response.data
-            })
-          actions.setError(null);
+            courseID: id,
+            updatedLecture: lecture,
+            });
+
+            actions.setError(null);
         } catch (err) {
-          actions.setError(err.message);
+            actions.setError(err.message || "Unknown error");
         } finally {
-          actions.setLoading(false);
+            actions.setLoading(false);
         }
-      }),
+        }),
+
     deleteLecture: thunk(async(actions,{id, lectureID,courseStoreActions}) => {
         actions.setLoading(true);
         try {
@@ -82,9 +89,6 @@ export const lectureStore = { lecture : {
           actions.setLecture({});
            // Reset the Lecture state after deletion
     
-          const removeToCourseFormData = new FormData();
-          removeToCourseFormData.append('id', lectureID);
-          await api.patch(`/courses/lectures/${id}/`, removeToCourseFormData);
           courseStoreActions.removeLectureFromCourse({
              courseId: id,
              lectureId: lectureID

@@ -5,13 +5,12 @@ import { useNavigate,Link } from 'react-router-dom'
 import {api} from "./../api/courses"
 const Home = () => {
   const id = localStorage.getItem("pk")
-  const canvas = useStoreState((state) => state.canvasStore.canvas)
-  const { loading, error} = useStoreState((state) => state.canvasStore.loading)
-  const fetchCanvasCourses = useStoreActions((actions) => actions.canvasStore.fetchCanvas)
+  const {canvas,user} = useStoreState((state) => state.userStore)
+  const { loading, error} = useStoreState((state) => state.userStore)
   useEffect(() => {
     const fetchData = async() => {
       try{
-        const {list_courses, user} =  await fetchCanvasCourses(id)
+        const {list_courses} = canvas.list_courses  
         console.log(list_courses)
       }catch(error) {
         console.error("Error fetching canvas courses:", error);
@@ -20,7 +19,7 @@ const Home = () => {
      if (id) {
     fetchData();
   }
-}, [fetchCanvasCourses, id]);
+}, [canvas.list_courses,id]);
     
     return (
         <article className="HomeCourses">

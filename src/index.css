@@ -42,6 +42,13 @@ code {
   display: inline-block;
   
 }
+.create-course{
+  background-color: #22C55E;
+  position:relative;
+  border: 1px solid black;
+  padding: 100px;
+  color: white;
+}
 .course:nth-child(1){
   background-color: #EF4444;
   position:relative;
@@ -313,4 +320,28 @@ td a{
   position: fixed;
   bottom: -145px;
   margin-top: 15px;
+}
+.NewCourse{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100vh;
+  padding: 145px;
+}
+.NewCourse h2{
+  position: absolute;
+  top: 35px;
+  left: 225px;
+}
+.NewLecture{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100vh;
+  padding: 145px;
+}
+.NewLecture h2{
+  position: absolute;
+  top: 35px;
+  left: 225px;
 }

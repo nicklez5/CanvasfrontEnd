@@ -1,20 +1,36 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import { StoreProvider } from 'easy-peasy';
+import { StoreProvider, useStoreRehydrated } from 'easy-peasy';
 import store from '../src/interface/model';
+const AppWrapper = () => {
+  const rehydrated = useStoreRehydrated();  // Check if the store has been rehydrated from localStorage
 
+  useEffect(() => {
+    if (rehydrated) {
+      console.log('Store has been rehydrated from localStorage');
+    }
+  }, [rehydrated]);
+
+  if (!rehydrated) {
+    // Optionally show a loading spinner or message until the state is rehydrated
+    return <div>Loading...</div>;
+  }
+  return (
+    <Router>
+      <Routes>
+        <Route path='/*' element={<App />} />
+      </Routes>
+    </Router>
+  );
+};
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StoreProvider store = {store}>
-      <Router>
-        <Routes>
-          <Route path='/*' element={<App />} />
-        </Routes>
-      </Router>
+        <AppWrapper />
     </StoreProvider>
   </React.StrictMode>
 );
