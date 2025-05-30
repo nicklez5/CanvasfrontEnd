@@ -61,8 +61,8 @@ export const lectureStore = { lecture : {
         actions.setLoading(true);
         try {
             const response = await api.post(`/lectures/post/`, formData);
-            const lecture = response?.data;
-            if (!lecture?.id) throw new Error("Lecture creation failed: No ID returned");
+            const lecture = response.data;
+            
 
             actions.setLecture(lecture);
 
@@ -70,8 +70,8 @@ export const lectureStore = { lecture : {
             await api.post(`/courses/lectures/${id}/`, linkData);
 
             courseStoreActions.addLectureInCourse({
-            courseID: id,
-            updatedLecture: lecture,
+                courseId: id,
+                updatedLecture: lecture,
             });
 
             actions.setError(null);
@@ -85,17 +85,20 @@ export const lectureStore = { lecture : {
     deleteLecture: thunk(async(actions,{id, lectureID,courseStoreActions}) => {
         actions.setLoading(true);
         try {
-          await api.delete(`/lectures/delete/${lectureID}/`);
-          actions.setLecture({});
-           // Reset the Lecture state after deletion
-    
           courseStoreActions.removeLectureFromCourse({
              courseId: id,
              lectureId: lectureID
           })
+          await api.delete(`/lectures/delete/${lectureID}/`);
+          actions.setLecture({});
+           // Reset the Lecture state after deletion
+    
           actions.setError(null);
+          return true
         }catch(error){
-            actions.setError(error.message)
+            console.error("Error deleting the lecture:", error);
+            actions.setError(error.message|| "Failed to delete lecture")
+            return false
         }finally{
             actions.setLoading(false)
         }

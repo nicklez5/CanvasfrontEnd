@@ -39,7 +39,7 @@ export const threadStore = {
         formData.append("title", threadData.title)
         actions.setLoading(true)
         try{
-            const response = await api.post(`/threads/post/`)
+            const response = await api.post(`/threads/post/`,formData)
             actions.setThread(response.data)
             const addToCourseFormData = new FormData();
             addToCourseFormData.append('id', response.data.id);

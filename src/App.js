@@ -13,8 +13,12 @@ import UserCourses from './components/UserCourses';
 import EditAssignment from './components/EditAssignment';
 import NewAssignment from './components/NewAssignment';
 import NewLecture from './components/NewLecture';
+import Register from './components/Register';
+import ProfilePage from './components/ProfilePage';
+import NewTest from './components/NewTest';
+import NewThread from './components/NewThread';
 function App() {
-   const fetchCourses = useStoreActions(actions => actions.courseStore.fetchCourses);
+  const fetchCourses = useStoreActions(actions => actions.courseStore.fetchCourses);
   const { loading, error } = useStoreState((state) => state.courseStore)
     useEffect(() => {
       fetchCourses()
@@ -44,6 +48,10 @@ function App() {
         <Route exact path="/courses/:id"  element={<CoursePage  />}/>
         <Route path="/editCourse/:id/Assignment/:id2" element = {<EditAssignment/>}/>
         <Route exact path="/addLecture/:courseID" element={<NewLecture />} />
+        <Route exact path="/addTest/:courseID" element={<NewTest/>}/>
+        <Route exact path="/register" element={<Register/>}/>
+        <Route exact path="/Profile" element ={<ProfilePage/>}/>
+        <Route exact path="/addThread/:courseID" element={<NewThread/>}/>
       </Routes>
     </div>
   );

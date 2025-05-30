@@ -7,7 +7,8 @@ const NewLecture = () => {
     const {courseID} = useParams() 
     const getCoursesByID = useStoreState((state) => state.courseStore.getCoursesById);
     const createLecture = useStoreActions((actions) => actions.lectureStore.createLecture)
-    const  courseStoreActions = useStoreActions((actions) => actions.courseStore)
+    const  {courseStoreActions} = useStoreActions((actions) => actions.courseStore)
+    const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails)
     const course = getCoursesByID(courseID)
     const [description, setDescription] = useState('')
     const [name, setName] = useState('')
@@ -16,28 +17,34 @@ const NewLecture = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
         const newLecture = {file: file, name: name, description: description}
-        createLecture({LectureData: newLecture,id:courseID, courseStoreActions})
-        navigate(`/courses/${courseID}`)
+        try{
+            await createLecture({LectureData: newLecture,id:courseID, courseStoreActions})
+            fetchCourseDetails(courseID);
+            navigate(`/courses/${courseID}`)
+        }catch(error){
+            console.error("Error creating the lecture:",error)
+        }
     }
     return(
-        <main className = "NewLecture">
+        <div className = "NewLecture">
             <h2>New Lecture</h2>
-            <form className="newPostForm" onSubmit={handleSubmit}>
-                <label htmlFor="postName">Lecture Name: </label>
-                <br/>
+            <form className="newPostForm" style={{display: "flex", flexDirection:"column"}} onSubmit={handleSubmit}>
+                <div style={{marginTop: "23px", paddingBottom: "15px"}}>
+                <label htmlFor="postName" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Lecture Name: </label>
                 <input
+                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "55px",paddingRight: "260px",left: "40px"}}
                     id="postName"
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
-                <br/>
-                <label htmlFor="postDescription">Lecture Description:</label>
-                <br/>
+                </div>
+                <div style={{marginTop: "15px", paddingBottom: "15px"}}>
+                <label htmlFor="postDescription" style={{position: "relative", left: "15px",bottom: "95px",fontWeight: "bolder"}}>Lecture Description:</label>
                 <textarea
-                    
-                    rows="4" 
+                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "40px"}}
+                    rows="10" 
                     cols="50"
                     id="postDescription"
                     type="text"
@@ -45,18 +52,19 @@ const NewLecture = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <br/>
-                <label htmlFor="postFile">Lecture File</label>
-                <br/>
+                </div>
+                <div style={{marginTop: "15px", paddingBottom: "15px"}}>
+                <label htmlFor="postFile" style={{position: "relative", left: "35px",fontWeight: "bolder"}}>Lecture File:</label>
                 <input 
+                    style={{position: "relative",padding: "40px",marginLeft: "15px",paddingRight: "150px", left: "160px"}}
                     id="postFile"
                     type="file"
                     onChange={(e) => setFile(e.target.files[0])}
                     />
-                <br/>
-                <button type="submit" style={{marginLeft: "150px" }}>Submit</button>
+                </div>
+                <button type="submit" className="submitBtn" style={{marginLeft: "150px" }}>Submit</button>
             </form>
-        </main>
+        </div>
     )
 }
 export default NewLecture

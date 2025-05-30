@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -41,6 +42,25 @@ code {
   position: relative;
   display: inline-block;
   
+}
+.logout{
+  background-color: #dc6e7c;
+  position: absolute;
+  border: 2px solid #dc6e7c;
+  box-shadow:#22C55E;
+  border-radius: 10px;
+  padding: 10px; 
+  top: -5px;
+  right: 20px;
+  color: white;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-top: 15px;
+  font-weight: 300;
+  font-size: 32px;
+}
+.logout:hover{
+ background-color: #FFFFFF; /* Green */
+ color: black;
 }
 .create-course{
   background-color: #22C55E;
@@ -146,8 +166,8 @@ td a{
 }
 .addClass{
   position:relative;
-  bottom: 135px;
-  left: 545px;
+  bottom: 145px;
+  left: 455px;
   border-radius: 10px;
   margin-left: 20px;
   padding: 20px;
@@ -157,8 +177,8 @@ td a{
 }
 .removeClass{
   position:relative;
-  bottom: 135px;
-  left: 945px;
+  bottom: 145px;
+  left: 475px;
   border-radius: 10px;
   margin-left: 20px;
   padding: 20px;
@@ -175,10 +195,10 @@ td a{
   
 }
 .addButton{
-  position: relative;
-  bottom: 50px;
-  left: 1000px;
-  margin-left: 20px;
+  position:sticky;
+  bottom: 1050px;
+  left: 1500px;
+  display: inline-block;
   background-color: #1B2F33;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 20px;
@@ -262,18 +282,18 @@ td a{
 .Home_Courses, .Home_Threads, .Home_Tests, .Home_Settings, .Home_Courses1{
   border: 1px solid white;
   position: relative;
-  bottom: 80px;
+  top: 15px;
   height: 100px;
   width: 150px;
   display: flex;
   flex-wrap: nowrap;
-  padding: 60px;
+  padding: 70px;
   grid-template-columns: auto auto auto auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 13px;
-  right: 85vh;
+  right: 75vh;
   
   background-color:#aaefdf;
 }
@@ -337,10 +357,112 @@ td a{
   display: flex;
   flex-direction: column;
   position: relative;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  justify-content: center;
+  height: auto;
+  padding: 105px;
+  background-color: #F59E0B;
+}
+.NewLecture h2{
+  position: relative;
+  font-family:sans-serif;
+  left: 300px;
+  font-weight:400px;
+}
+.registerForm{
+  width: 400px;
+  background-color: #F59E0B;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  padding: 70px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  justify-content: center;
+}
+.registerForm h2{
+  position: relative;
+  font-family:sans-serif;
+  left: 100px;
+  font-weight:400px;
+}
+.submitBtn{
+  position: relative;
+  width:20vh;
+  left: 125px;
+  margin-top:15px;
+  font-size: 15px;
+  padding: 20px;
+  border-radius: 10px; 
+  background-color: #111827;
+  color: white
+}
+.submitBtn:hover{
+  background-color: #FFFFFF; /* Green */
+  color: black;
+}
+.profile-page{
+  width: 400px;
+  background-color: #F59E0B;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  padding: 70px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  justify-content: center;
+}
+.profile-page h2{
+  position: relative;
+  font-family:sans-serif;
+  left: 140px;
+  font-weight:400px;
+}
+.NewAssignment{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  justify-content: center;
+  height: auto;
+  padding: 105px;
+  background-color: #DB3F29;
+}
+.NewAssignment h2{
+  position: relative;
+  font-family:sans-serif;
+  left: 250px;
+  font-weight:400px;
+}
+.NewTest{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  justify-content: center;
+  height: auto;
+  padding: 105px;
+  background-color: #AC58F5;
+}
+.NewTest h2{
+  position: relative;
+  font-family:sans-serif;
+  left: 250px;
+  font-weight:400px;
+}
+.NewThread{
+  display: flex;
+  flex-direction: column;
+  position: relative;
   height: 100vh;
   padding: 145px;
 }
-.NewLecture h2{
+.NewThread h2{
   position: absolute;
   top: 35px;
   left: 225px;

@@ -122,17 +122,20 @@ export const assignmentStore = { assignment : {
   deleteAssignment: thunk(async(actions,{id, assignmentID,courseStoreActions}) => {
     actions.setLoading(true);
     try {
-      await api.delete(`/assignments/delete/${assignmentID}/`);
-      actions.setAssignment({});
-       // Reset the assignment state after deletion
-
       courseStoreActions.removeAssignmentFromCourse({
          courseId: id,
          assignmentId: assignmentID
       })
+      await api.delete(`/assignments/delete/${assignmentID}/`);
+      actions.setAssignment({});
+       // Reset the assignment state after deletion
+
       actions.setError(null);
+      return true
     }catch(error){
-        actions.setError(error.message)
+        console.error("Error deleting the assignment:", error);
+        actions.setError(error.message|| "Failed to delete assignment")
+        return false
     }finally{
         actions.setLoading(false)
     }

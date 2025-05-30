@@ -144,6 +144,18 @@ export const courseStore = {
         });
     }
     }),
+    removeStudentFromCourse: action((state, { courseId, studentId }) => {
+        state.courses = state.courses.map((course) => {
+        if (course.id === courseId) {
+            // Remove the student from the course's profiles list
+            return {
+            ...course,
+            profiles: course.profiles.filter((profile) => profile.id !== studentId),
+            };
+        }
+        return course;
+        });
+    }),
     addThreadInCourse: action((state, { courseId, updatedThread }) => {
     // Find the course by courseId
     const courseIndex = state.courses.findIndex(course => course.id === courseId);
@@ -268,28 +280,17 @@ export const courseStore = {
     });
     }),
     
-    addLectureInCourse: action((state, { courseId, updatedLecture }) => {
-    // Find the course by courseId
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-
-    // If the course exists
-    if (courseIndex !== -1) {
-        // Check if the lecture is already in the array to avoid duplicates
-        const lectureExists = state.courses[courseIndex].lectures.some(lecture => lecture.id === updatedLecture.id);
-
-        if (!lectureExists) {
-            // Immutably update only the lectures array of the selected course
-            state.courses = state.courses.map((course, index) => {
-                if (index === courseIndex) {
-                    return {
-                        ...course,  // Copy the existing course object
-                        lectures: [...course.lectures, updatedLecture]  // Add the new test immutably
-                    };
-                }
-                return course;  // Return the other courses unchanged
-            });
+    addLectureInCourse: action((state, { courseID, updatedLecture }) => {
+    // Update the course's lectures with the new lecture
+    state.courses = state.courses.map((course) => {
+        if (course.id === courseID) {
+            return {
+                ...course,
+                lectures: [...course.lectures, updatedLecture], // Add the new lecture
+            };
         }
-    }
+        return course;
+    });
     }),
     removeLectureFromCourse: action((state, { courseId, lectureId }) => {
     // Find the course by courseId
@@ -335,15 +336,18 @@ export const courseStore = {
             // Make an API call to fetch the course details, assignments, lectures, etc.
             const response = await api.get(`/courses/detail/${courseId}/`);
             
-            const { course, assignments, lectures, tests, profiles, threads } = response.data;
+            const { id,name, assignments, lectures, tests, profiles, threads } = response.data;
+            
             const updatedCourse = {
-                ...course,               // Copy the course data
+                id,
+                name,              // Copy the course data
                 assignments,             // Add assignments to the course
                 lectures,                // Add lectures to the course
                 tests,                   // Add tests to the course
                 profiles,                // Add profiles to the course
                 threads,                 // Add threads to the course
             };
+            //console.log("Course Data:" , JSON.stringify(updatedCourse))
             // Update the store with the fetched data
              actions.setCourses([updatedCourse]);  // Set the updated course information in the courses array
 
@@ -443,21 +447,6 @@ export const courseStore = {
                 threads: course.threads.map(thread => 
                     thread.id === updatedThread.id ? updatedThread : thread
                 )  // Replace the updated thread
-            };
-        }
-        return course;  // Return the course unchanged if it doesn't match courseId
-    });
-}),
-    updateProfileInCourse: action((state, { courseId, updatedProfile }) => {
-    // Use map to create a new courses array with the updated profile
-    state.courses = state.courses.map(course => {
-        if (course.id === courseId) {
-            // Update the profiles array by mapping over it
-            return {
-                ...course,  // Copy the existing course object
-                profiles: course.profiles.map(profile => 
-                    profile.id === updatedProfile.id ? updatedProfile : profile
-                )  // Replace the updated profile
             };
         }
         return course;  // Return the course unchanged if it doesn't match courseId

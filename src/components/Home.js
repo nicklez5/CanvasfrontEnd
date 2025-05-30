@@ -7,6 +7,8 @@ const Home = () => {
   const id = localStorage.getItem("pk")
   const {canvas,user} = useStoreState((state) => state.userStore)
   const { loading, error} = useStoreState((state) => state.userStore)
+  
+  
   useEffect(() => {
     const fetchData = async() => {
       try{
@@ -29,9 +31,10 @@ const Home = () => {
                 isLoading: loading
             }}>Enrolled Courses</Link></div>
             <div className="Home_Tests"><Link to="/Courses"  style={{color: "white"}} >Browse Courses</Link></div>
-            <div className="Home_Threads">Threads</div>
+            <div className="Home_Settings"><Link to="/Profile" style={{color: "white"}}>Profile</Link></div>
+            <div className="Home_Threads"><Link to="/ChangePassword" style={{color: "white"}}>User Settings</Link></div>
 
-            <div className="Home_Settings">Profile</div>
+
         </main>
         </article>
         

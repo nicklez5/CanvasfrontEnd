@@ -25,10 +25,12 @@ export const userStore = {
         id: "",
         list_courses: [],  // Array of courses the user is enrolled in
     },
-
+    loggedIn: false,
     loading: false,
     error: null,
-
+    setLoggedIn: action((state,payload) => {
+        state.loggedIn = payload
+    }),
     // Action to set the entire user data
     setUser: action((state, payload) => {
         state.user = payload;
@@ -109,7 +111,7 @@ export const userStore = {
         };
         state.error = null;
         state.loading = false;
-
+        state.loggedIn = false;
         // Remove the token from localStorage
         localStorage.removeItem('token');
         localStorage.removeItem('pk'); // Optional: remove user id as well if stored
@@ -122,19 +124,12 @@ export const userStore = {
         localStorage.removeItem('threadStore');
         // Optional: reset any other state you may want to clear on logout
     }),
-    updateProfile: thunk(async(actions,{updatedProfile, course_id, courseStoreActions}) => {
+    updateProfile: thunk(async(actions,updatedProfile) => {
             
             actions.setLoading(true)
             try{
                 const response = await api.put(`/profiles/detail/`,updatedProfile)
                 actions.setProfile(response.data)
-                if (course_id) {
-                // Update courses with the updated profile information
-                    courseStoreActions.updateProfileInCourse({
-                        courseId: course_id,   // The course ID
-                        updatedProfile: response.data // The updated profile data
-                    });
-                }
                 actions.setError(null)
     
             }catch(error){
@@ -146,7 +141,7 @@ export const userStore = {
     addCourseToCanvasThunk: thunk(async (actions,  course) => {
         actions.setLoading(true);
         try {
-            // Send a POST request to associate the course with the user
+            // Send a POST request to associate the course with the userq
             await api.post(`/canvas/courses/${localStorage.getItem("pk")}/`,{ id: course.id });
             
             // Update the canvas in the store
@@ -163,15 +158,15 @@ export const userStore = {
         actions.setLoading(true);
         try {
             // Send login request to authenticate the user and get the token
-            const response = await axios.post(`http://localhost:8000/users/login/`, credentials);
+            const response = await api.post(`/users/login/`, credentials);
             const { token, user_id } = response.data;
 
             // Store the token and user_id in localStorage for subsequent requests
             localStorage.setItem("token", token);
             localStorage.setItem("pk", user_id);
-
+            actions.setLoggedIn(true)
             // Fetch the user profile details using the user_id
-            const userResponse = await api.get(`/users/detail/${user_id}/`);
+            const userResponse = await api.get(`users/detail/${user_id}/`);
             actions.setUser(userResponse.data);  // Set the user data in store
 
             // Fetch the user profile details
@@ -179,7 +174,7 @@ export const userStore = {
             actions.setProfile(profileResponse.data);  // Set profile data in store
 
             // Fetch the user's canvas (list of courses)
-            const canvasResponse = await api.get(`/canvas/detail/${user_id}/`);
+            const canvasResponse = await api.get(`http://localhost:8000/canvas/detail/${user_id}/`);
             actions.setCanvas({list_courses: canvasResponse.data.list_courses, id : canvasResponse.data.id});  // Set canvas (courses) data in store
 
             actions.setError(null);
@@ -214,11 +209,11 @@ export const userStore = {
     setError: action((state, payload) => {
         state.error = payload;
     }),
-    getCoursesById: computed((state) => {
+    getCourseById: computed((state) => {
     return (id) => {
         const course = state.canvas.list_courses.find(course => String(course.id) === String(id));
         if (!course) {
-            return { error: "Course not found" };
+            return undefined;
         }
         return course;
     };

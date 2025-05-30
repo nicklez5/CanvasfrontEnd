@@ -3,14 +3,13 @@ import { format } from 'date-fns'
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { useParams,Link } from 'react-router-dom';
 import { useState } from 'react';
-
-const NewAssignment = () => {
+const NewTest = () => {
     const {courseID} = useParams() 
-    const createAssignment = useStoreActions((actions) => actions.assignmentStore.createAssignment)
+    const createTest = useStoreActions((actions) => actions.testStore.createTest)
     const  {courseStoreActions} = useStoreActions((actions) => actions.courseStore)
     const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails)
     const navigate = useNavigate()
-    const [assignment_file, setAssignmentFile] = useState(null)
+    const [file, setFile] = useState(null)
     const [name, setName] = useState('')
     const [date_due, setDateDue] = useState('')
     const [description, setDescription] = useState('')
@@ -27,9 +26,9 @@ const NewAssignment = () => {
             return `${year}-${month}-${day} ${hours}:${minutes}`
         }
         const datetime = formatDate(new Date(date_due))
-        const newAssignment = {name: name, description: description, date_due: datetime, assignment_file: assignment_file, max_points: max_points }
+        const newTest = {name: name, description: description, date_due: datetime, file: file, max_points: max_points }
         try{
-            await createAssignment({assignmentData: newAssignment, id: courseID, courseStoreActions})
+            await createTest({testData: newTest, id: courseID, courseStoreActions})
             fetchCourseDetails(courseID);
             navigate(`/courses/${courseID}`)
         }catch(error){
@@ -37,12 +36,12 @@ const NewAssignment = () => {
         }
 
     }
-    return(
-        <div className = "NewAssignment">
-            <h2>New Assignment</h2>
+  return (
+    <div className = "NewTest">
+            <h2>New Test</h2>
             <form className="newPostForm" style={{display: "flex", flexDirection:"column"}} onSubmit={handleSubmit}>
                 <div style={{marginTop: "23px", paddingBottom: "15px"}}>
-                <label htmlFor="postName" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Assignment Name:</label>
+                <label htmlFor="postName" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Test Name:</label>
                 <input
                     style={{position: "relative",padding: "10px", marginLeft: "25px",paddingRight: "160px",left: "55px"}}
                     id="postName"
@@ -53,7 +52,7 @@ const NewAssignment = () => {
                 />
                 </div>
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postDate" style={{position: "relative", left: "15px",bottom: "-5px",fontWeight: "bolder"}}>Assignment Due Date:</label>
+                <label htmlFor="postDate" style={{position: "relative", left: "15px",bottom: "-5px",fontWeight: "bolder"}}>Test Due Date:</label>
                 <input 
                     style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "120px",left: "40px"}}
                     id="postDate"
@@ -64,7 +63,7 @@ const NewAssignment = () => {
                 />
                 </div>
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postDescription" style={{position: "relative", left: "1px",bottom: "95px",fontWeight: "bolder"}}>Assignment Description:</label>
+                <label htmlFor="postDescription" style={{position: "relative", left: "1px",bottom: "95px",fontWeight: "bolder"}}>Test Description:</label>
                 <textarea
                      style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "20px"}}
                     rows="10" 
@@ -77,9 +76,9 @@ const NewAssignment = () => {
                 />
                 </div>
                 <div tyle={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postMaxPoints" style={{position: "relative", left: "2px",fontWeight: "bolder"}}>Assignment Max Points</label>
+                <label htmlFor="postMaxPoints" style={{position: "relative", left: "2px",fontWeight: "bolder"}}>Test Max Points</label>
                 <input 
-                    style={{position: "relative",padding: "10px",marginLeft: "25px",paddingRight: "150px", left: "15px"}}
+                    style={{position: "relative",padding: "10px",marginLeft: "25px",paddingRight: "20px", left: "15px"}}
                     id="postMaxPoints"
                     type="number"
                     required
@@ -88,17 +87,18 @@ const NewAssignment = () => {
                     />
                 </div>
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postFile" style={{position: "relative", left: "55px",fontWeight: "bolder"}}>Assignment File</label>
+                <label htmlFor="postFile" style={{position: "relative", left: "55px",fontWeight: "bolder"}}>Test File</label>
                 <input 
                     style={{position: "relative",padding: "40px",marginLeft: "15px",paddingRight: "150px", left: "50px"}}
                     id="postFile"
                     type="file"
-                    onChange={(e) => setAssignmentFile(e.target.files[0])}
+                    onChange={(e) => setFile(e.target.files[0])}
                     />
                 </div>
                 <button type="submit" className="submitBtn" style={{marginLeft: "120px" }}>Submit</button>
             </form>
         </div>
-    )
+  )
 }
-export default NewAssignment
+
+export default NewTest

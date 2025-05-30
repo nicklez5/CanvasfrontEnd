@@ -1,7 +1,19 @@
 import axios from 'axios'
-export default axios.create({
+const api = axios.create({
     baseURL: 'http://localhost:8000',
-    headers: {
-        'Authorization':`Token ${localStorage.getItem('token')}`,
-    }
+    
 })
+// Add a request interceptor to conditionally add Authorization header
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Token ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+export default api;
