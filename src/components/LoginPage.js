@@ -1,9 +1,10 @@
 import { React, useState} from 'react'
 import axios from 'axios';
-import { useNavigate, Link} from "react-router-dom"
+import { useNavigate, Link , Navigate} from "react-router-dom"
 import Swal from 'sweetalert2';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import Home from './Home';
+import Header from './Header'; 
 import styled from 'styled-components';
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -11,47 +12,86 @@ const LoginPage = () => {
   const [password, setPassword] = useState("")
   const fetchUser = useStoreActions((actions) => actions.userStore.fetchUser)
   const loggedIn = useStoreState((state) => state.userStore.loggedIn)
-  async function handleLogin(e){
-    e.preventDefault()
-    try{
-        const user = await fetchUser({email,password})
-        if(user === undefined){
-            alert('Wrong Credentials');
-        }else{
-            navigate('/home')
-        }
-        console.log('Logged in as user:', JSON.stringify(user))
-    }catch(error){
-        alert('Wrong ');
-        Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: error.response.data.message
-        })
+  const login = useStoreActions((actions) => actions.userStore.fetchUser);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await login({ email, password });
+      navigate('/home');
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  // If already logged in, redirect to home
+  if (loggedIn) {
+    return <Navigate to="/home" replace />;
   }
   
   return (
-    <>
-    {loggedIn === false ? (
-    <div className="container" style={{marginTop: "10vh"}}>
-         <form onSubmit={handleLogin}>
-            <h2>Login to your Account</h2>
-            <p>Welcome back!</p>
+    <div className="container">
+      {/* Push the form down by ~10% of the viewport height on large screens */}
+      <div className="row justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
+        <div className="col-12 col-md-6 col-lg-4">
+          <form onSubmit={handleLogin} className="shadow-sm p-4 rounded bg-white">
+            <h2 className="mb-3 text-center">Login to Your Account</h2>
+            <p className="text-center text-muted mb-4">Welcome back!</p>
+
             <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email address: </label>
-                <input onChange={e => {setEmail(e.target.value)}} type="email" className="form-control" id="email"/>
+              <label htmlFor="email" className="form-label">
+                Email address
+              </label>
+              <input
+                id="email"
+                type="email"
+                className="form-control"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
             </div>
-            <div className="mb-3">
-                <label htmlFor="password" className="form-label2">Password: </label>
-                <input onChange={e => {setPassword(e.target.value)}} type="password" className="form-control2" id="password" />
+
+            <div className="mb-4">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                className="form-control"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
             </div>
-            <button type="submit" className="btn" >Log in</button>
-            <p style={{marginTop: "2vh", marginLeft: "4vh"}}>Don't have an account?<Link to={'/register'}>Create an account</Link></p>
-        </form> 
-    </div> ) : <Home/> }
-    </>
-  )
+
+            <button type="submit" className="btn1 btn-primary w-100 mb-3 btn-login">
+              Log In
+            </button>
+
+            <div className="text-center">
+              <small className="text-muted">
+                Don’t have an account?{' '}
+                <Link to="/register" className="text-decoration-none">
+                  Create one
+                </Link>
+              </small>
+            </div>
+            <div className="text-center">
+              <small className="text-muted">
+                
+                <Link to="/forgotPassword" className="text-decoration-none">
+                  Forgot Password?
+                </Link>
+              </small>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default LoginPage

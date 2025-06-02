@@ -4,7 +4,7 @@ import useWindowSize from '../hooks/useWindowSize';
 import { useStoreState, useStoreActions} from "easy-peasy"
 import { useParams, Link, useNavigate} from "react-router-dom"
 import { PiX } from 'react-icons/pi';
-
+import { Navbar, Container, Nav ,Button } from 'react-bootstrap';
 const Header = ({title}) => {
   const navigate = useNavigate()
   const loggedIn = useStoreState((state) => state.userStore.loggedIn)
@@ -30,9 +30,55 @@ const Header = ({title}) => {
   }
   const { width} = useWindowSize();
   return (
-    <header className="Header">
-        <h1><Link to={{pathname: loggedIn ? "/home" : '/'}}>{title}</Link>{ width < 768 ? <Link to="/home"><FaMobileAlt /></Link> : width < 992 ? <Link to="/home"><FaTabletAlt  /></Link>: <Link to="/home"><FaAtlas style={myStyle}/></Link>}</h1><>{loggedIn ? (<><button className="logout" onClick={handleLogout}>Log out</button> </>) : <a href="/Courses" style={aStyle}>Browse Courses</a>}</>
-    </header>
+     <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to={loggedIn ? '/home' : '/'}>{title}</Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNav"
+          aria-controls="mainNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="mainNav">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            {loggedIn && (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/home">Home</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/courses">Browse Courses</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/UserCourses">Enrolled Courses</Link>
+                </li>
+              </>
+            )}
+          </ul>
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+            {loggedIn ? (
+              <li className="nav-item">
+                <button className="btn btn-outline-light  btn-logout" onClick={handleLogout}>
+                  Log out
+                </button>
+              </li>
+            ) : (
+              <li className="nav-item">
+                <Link className="btn btn-outline-light btn-spacious" to="/courses">
+                  Browse Courses
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </nav>
 
   )
 }

@@ -2,15 +2,12 @@ import axios from 'axios';
 import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 export const testStore = { test : {
-    id: '',
+    id: 0,
     name: '',
-    submitter: '',
     description: '',
     date_due : '',
     max_points: 0,
-    student_points: 0,
-    file: '',
-    student_file: ''
+    test_file: '',
 },
   loading: false,
   error: null,
@@ -43,39 +40,16 @@ export const testStore = { test : {
       actions.setLoading(false);
     }
   }),
-  submitTest: thunk(async (actions, { testData, courseID, testID, courseStoreActions }) => {
-    const formData = new FormData();
-    formData.append("student_file", testData.student_file);
-    formData.append("student_points", testData.student_points);  // Optional score
-
-    actions.setLoading(true);
-
-    try {
-        // Step 1: Submit the test file (PUT request to backend)
-        const response = await api.put(`/tests/submit/${testID}/`, formData);
-
-        // Step 3: Update the frontend state (update the test in the course’s tests)
-        courseStoreActions.updateTestInCourse({
-            courseId: courseID,
-            updatedTest: response.data, // Updated test data returned from the API
-        });
-
-        actions.setError(null);  // Clear any errors
-    } catch (error) {
-        actions.setError(error.message);  // Handle errors
-    } finally {
-        actions.setLoading(false);  // Stop loading
-    }
-}),
   // Optional: Update assignment
   updateTest: thunk(async (actions, { updatedData, id , courseStoreActions }) => {
     const formData = new FormData();
-    formData.append('file', updatedData.file);
+    if(updatedData.test_file !== null){
+        formData.append('test_file', updatedData.test_file);
+    }
     formData.append("name",updatedData.name)
     formData.append("date_due",updatedData.date_due)
     formData.append("description",updatedData.description)
     formData.append("max_points",updatedData.max_points)
-    formData.append("student_points",updatedData.student_points)
     actions.setLoading(true);
     try {
       const response = await api.put(`/tests/update/${updatedData.id}/`, formData)
@@ -93,7 +67,7 @@ export const testStore = { test : {
   }),
   createTest: thunk(async(actions,{testData, id, courseStoreActions} ) => {
     const formData = new FormData();
-    formData.append('file',testData.file)
+    formData.append('test_file',testData.test_file)
     formData.append("name",testData.name)
     formData.append("date_due",testData.date_due)
     formData.append("description",testData.description)
@@ -119,17 +93,20 @@ export const testStore = { test : {
   deleteTest: thunk(async(actions,{id, testID,courseStoreActions}) => {
     actions.setLoading(true);
     try {
-      await api.delete(`/tests/delete/${testID}/`);
-      actions.setTests({});
-       // Reset the test state after deletion
-       
       courseStoreActions.removeTestFromCourse({
          courseId: id,
          testId: testID
       })
+      await api.delete(`/tests/delete/${testID}/`);
+     
       actions.setError(null);
+       // Reset the test state after deletion
+      return true
+      
     }catch(error){
+        console.log("error:" ,error.message)
         actions.setError(error.message)
+        return false
     }finally{
         actions.setLoading(false)
     }

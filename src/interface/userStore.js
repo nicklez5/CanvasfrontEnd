@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { HttpStatusCode } from 'axios';
 import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 import { PiAlignCenterHorizontalSimple } from 'react-icons/pi';
@@ -7,13 +7,13 @@ export const userStore = {
     user: {
         username: "",
         email: "",
-        pk: "",
+        pk: 0,
         is_staff: false,
     },
 
     // Profile and Canvas data for the user
     profile: {
-        id: "",
+        id: 0,
         first_name: "",
         last_name: "",
         date_of_birth:"",
@@ -22,7 +22,7 @@ export const userStore = {
     },
 
     canvas: {
-        id: "",
+        id: 0,
         list_courses: [],  // Array of courses the user is enrolled in
     },
     loggedIn: false,
@@ -73,19 +73,44 @@ export const userStore = {
         state.canvas.list_courses.push(course);
         }
     }),
+    forgotPassword: thunk(async ( actions, payload) => {
+        actions.setLoading(true);
+        try {
+            await api.post('/users/forgot-password/', payload);
+            actions.setError(null);
+        } catch (err) {
+            const msg =
+            err.response && err.response.data
+                ? err.response.data.detail || 'Error sending reset link'
+                : err.message;
+            actions.setError(msg);
+        } finally {
+            actions.setLoading(false);
+        }
+    }),
     register: thunk(async (actions, userData) => {
         actions.setLoading(true);
         try {
             const response = await api.post('/users/register/', userData);
-
+            const data = response.data;
             // If successful, set the user data and token in localStorage
-            const { token, user } = response.data;
+            const token = data.token;
             localStorage.setItem("token", token);
-            actions.setUser(user);
+            const newUser = {
+                pk: data.user_id,
+                username: data.username,
+                email: data.email,
+                is_staff: data.staff,
+            };
+            actions.setUser(newUser);
 
             actions.setError(null);
+            return { success: true };
         } catch (error) {
-            actions.setError(error.message);
+            const message =
+            error.response?.data || error.message || "Registration failed.";
+            actions.setError(message);
+            return { success: false, error: message };
         } finally {
             actions.setLoading(false);
         }
@@ -95,18 +120,18 @@ export const userStore = {
         state.user = {
             username: "",
             email: "",
-            pk: "",
+            pk: 0,
             is_staff: false
         };
         state.profile = {
-            id: "",
+            id: 0,
             first_name: "",
             last_name: "",
             date_of_birth:"",
             email: ""
         };
         state.canvas = {
-            id: "",
+            id: 0,
             list_courses: []  // Array of courses the user is enrolled in
         };
         state.error = null;
@@ -122,6 +147,7 @@ export const userStore = {
         localStorage.removeItem('messageStore');
         localStorage.removeItem('testStore');
         localStorage.removeItem('threadStore');
+        localStorage.removeItem('submissionStore')
         // Optional: reset any other state you may want to clear on logout
     }),
     updateProfile: thunk(async(actions,updatedProfile) => {
@@ -166,7 +192,7 @@ export const userStore = {
             localStorage.setItem("pk", user_id);
             actions.setLoggedIn(true)
             // Fetch the user profile details using the user_id
-            const userResponse = await api.get(`users/detail/${user_id}/`);
+            const userResponse = await api.get(`users/detail/`);
             actions.setUser(userResponse.data);  // Set the user data in store
 
             // Fetch the user profile details
@@ -217,5 +243,20 @@ export const userStore = {
         }
         return course;
     };
+
 }),
+    fetchUserCourses: thunk(async(actions) => {
+        actions.setLoading(true);
+        try {
+            const canvasResponse = await api.get(`http://localhost:8000/canvas/detail/${localStorage.getItem("pk")}/`)// Assuming `api` is an Axios instance
+            actions.setCanvas({list_courses: canvasResponse.data.list_courses, id : canvasResponse.data.id});  // Clear any previous errors
+
+            return canvasResponse.data.list_courses;  // Optionally return the courses here
+        } catch (err) {
+            // Set error message if an error occurs
+            actions.setError(err.message);
+        } finally {
+            actions.setLoading(false);  // Turn off the loading state
+        }
+    })
 };

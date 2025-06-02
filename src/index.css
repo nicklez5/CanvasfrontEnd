@@ -1,4 +1,12 @@
-
+#root{
+   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid #333;
+  box-shadow: 0px 0px 15px gray;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -6,6 +14,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+   padding-top: 56px;
 }
 
 code {
@@ -165,24 +174,23 @@ td a{
   
 }
 .addClass{
-  position:relative;
-  bottom: 145px;
-  left: 455px;
-  border-radius: 10px;
-  margin-left: 20px;
-  padding: 20px;
-  background-color: #171435;
-  color: white;
+  position:absolute;
+  left: 570px;
+  background-color: #DB3F29;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 15px;
+  color: white;
+  margin-left: 20px;
+  border-radius: 10px;
 }
 .removeClass{
-  position:relative;
-  bottom: 145px;
-  left: 475px;
+  position:absolute;
+  left: 570px;
+
   border-radius: 10px;
   margin-left: 20px;
-  padding: 20px;
-  background-color: #171435;
+  padding: 15px;
+  background-color: #5BC0BE;
   color: white;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -192,7 +200,7 @@ td a{
   flex-wrap: wrap;
   gap: 45px;
   padding-bottom: 87vh;
-  
+  margin-left: 54px;
 }
 .addButton{
   position:sticky;
@@ -206,7 +214,7 @@ td a{
   border-radius: 15px;
 }
 .editButton{
-  display: relative;
+  position: relative;
   margin-left: 20px;
   padding: 10px;
   background-color:#339989;
@@ -233,14 +241,14 @@ td a{
   border-radius: 15px;
 }
 .container{
-  padding-bottom: 87vh;
+  padding-bottom: 35vh;
 }
 .container h2{
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  left: 30px;
+  right: 5px;
 }
 .container p{
   position: relative;
@@ -266,7 +274,7 @@ td a{
   padding: 10px;
   margin-left: 40px;
 }
-.btn{
+.btn1{
   background: #0066A2;
   color: white;
   border-style: outset;
@@ -282,12 +290,12 @@ td a{
 .Home_Courses, .Home_Threads, .Home_Tests, .Home_Settings, .Home_Courses1{
   border: 1px solid white;
   position: relative;
-  top: 15px;
+  bottom: 55px;
   height: 100px;
   width: 150px;
   display: flex;
   flex-wrap: nowrap;
-  padding: 70px;
+  padding: 140px;
   grid-template-columns: auto auto auto auto;
   flex-direction: column;
   justify-content: center;
@@ -459,11 +467,105 @@ td a{
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100vh;
+  margin-top: 15vh;
+  margin-bottom:50vh;
+  top: 15px;
+  justify-content: center;
+  height: auto;
   padding: 145px;
+  background-color: #F29559;
 }
 .NewThread h2{
   position: absolute;
-  top: 35px;
-  left: 225px;
+  font-family:sans-serif;
+  top: 65px;
+  left: 195px;
+}
+.NewMessage{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 25vh;
+  margin-bottom:50vh;
+  justify-content: center;
+  height: auto;
+  padding: 75px;
+  background-color: #8EC1D6;
+}
+.NewMessage h2{
+  position: absolute;
+  font-family:sans-serif;
+  left: 100px;
+  bottom: 600px;
+  margin-bottom: 10px;
+  font-weight:100px;
+  font-size: 25px;
+  border: 1px solid black;
+  padding: 20px;
+  background-color: #8EC1D6;
+}
+.btn-spacious {
+  width: 140px;
+  margin-top: 20px;
+  padding: 7.5px;
+  margin-right: 20px;
+  position: relative;
+  bottom: 10px;  /* adjust as needed */
+}
+.btn-login{
+  position: relative;
+  right: 150px;
+}
+.register-label{
+  right: 50px;
+}
+.btn-logout{
+  width: 140px;
+  margin-right: 20px;
+  margin-top: 10px;
+  position: relative;
+  padding: 7.5px;
+}
+.btn-profile{
+  width: 250px;
+  left: 40px;
+  margin-right: 40px;
+}
+.btn-reset {
+  width: 170px;
+  margin-right: 40px;
+  left: 40px;  /* adjust as needed */
+}
+.addMessage{
+  position:sticky;
+  bottom: 1050px;
+  left: 200px;
+  display: inline-block;
+  background-color: #1B2F33;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 15px;
+  color: white;
+  border-radius: 15px;
+}
+.deleteClass{
+  position: absolute;
+  left: 445px;
+  background-color: #0F203A;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  color: white;
+  border-radius: 15px
+}
+.grades{
+  position: absolute;
+  left: 445px;
+  background-color: #0F203A;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  color: white;
+  border-radius: 15px
 }

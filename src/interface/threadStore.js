@@ -3,8 +3,8 @@ import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 export const threadStore = { 
     thread : {
-        id: "",
-        list_messages: [],
+        id: 0,
+        list_of_messages: [],
         title: '',
         created_at: "",
 
@@ -19,17 +19,18 @@ export const threadStore = {
     deleteThread: thunk(async(actions,{id, threadID,courseStoreActions}) => {
         actions.setLoading(true)
         try{
-            const response = await api.delete(`/threads/delete/${threadID}/`)
-            if(response.data["message"] === "Thread deleted successfully."){
-                courseStoreActions.removeThreadFromCourse({
+            courseStoreActions.removeThreadFromCourse({
                     courseId: id,
                     threadId: threadID
-                })
-                actions.setThread({})
-                actions.setError(null)
-            }
+            })
+            await api.delete(`/threads/delete/${threadID}/`) 
+            actions.setThread({})
+            actions.setError(null)
+            return true
         }catch(error){
             actions.setError(error.message)
+            console.log("Error:",error.message)
+            return false
         }finally{
             actions.setLoading(false)
         }
@@ -91,6 +92,12 @@ export const threadStore = {
     }),
     setError: action((state, payload) => {
         state.error = payload;
+    }),
+    reset: action((state,payload) => {
+        state.thread = payload
+        state.error = null
+        state.loading = false
+        // Return a copy of the initial state
     }),
     // addMessages: thunk(async(actions,{threadID,messageBody, courseID, courseStoreActions}) => {
     //     const formData = new FormData()

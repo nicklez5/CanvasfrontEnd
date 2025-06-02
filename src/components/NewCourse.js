@@ -12,7 +12,7 @@ const NewCourse = () => {
     e.preventDefault();
 
     createCourse({name: courseName})
-    navigate('/Courses')
+    navigate('/courses')
   }
   return (
     <div className="NewCourse">

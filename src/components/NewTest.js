@@ -6,10 +6,11 @@ import { useState } from 'react';
 const NewTest = () => {
     const {courseID} = useParams() 
     const createTest = useStoreActions((actions) => actions.testStore.createTest)
-    const  {courseStoreActions} = useStoreActions((actions) => actions.courseStore)
-    const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails)
+
+    const  {addTestInCourse} = useStoreActions((actions) => actions.courseStore)
+    const {fetchCourseDetails} = useStoreActions((actions) => actions.courseStore)
     const navigate = useNavigate()
-    const [file, setFile] = useState(null)
+    const [test_file, setTestFile] = useState(null)
     const [name, setName] = useState('')
     const [date_due, setDateDue] = useState('')
     const [description, setDescription] = useState('')
@@ -26,9 +27,9 @@ const NewTest = () => {
             return `${year}-${month}-${day} ${hours}:${minutes}`
         }
         const datetime = formatDate(new Date(date_due))
-        const newTest = {name: name, description: description, date_due: datetime, file: file, max_points: max_points }
+        const newTest = {name: name, description: description, date_due: datetime, test_file: test_file, max_points: max_points }
         try{
-            await createTest({testData: newTest, id: courseID, courseStoreActions})
+            await createTest({testData: newTest, id: courseID, courseStoreActions: {addTestInCourse}})
             fetchCourseDetails(courseID);
             navigate(`/courses/${courseID}`)
         }catch(error){
@@ -92,7 +93,7 @@ const NewTest = () => {
                     style={{position: "relative",padding: "40px",marginLeft: "15px",paddingRight: "150px", left: "50px"}}
                     id="postFile"
                     type="file"
-                    onChange={(e) => setFile(e.target.files[0])}
+                    onChange={(e) => setTestFile(e.target.files[0])}
                     />
                 </div>
                 <button type="submit" className="submitBtn" style={{marginLeft: "120px" }}>Submit</button>

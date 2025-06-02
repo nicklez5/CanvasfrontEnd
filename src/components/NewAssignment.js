@@ -7,7 +7,7 @@ import { useState } from 'react';
 const NewAssignment = () => {
     const {courseID} = useParams() 
     const createAssignment = useStoreActions((actions) => actions.assignmentStore.createAssignment)
-    const  {courseStoreActions} = useStoreActions((actions) => actions.courseStore)
+    const  {addAssignmentInCourse} = useStoreActions((actions) => actions.courseStore)
     const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails)
     const navigate = useNavigate()
     const [assignment_file, setAssignmentFile] = useState(null)
@@ -29,7 +29,7 @@ const NewAssignment = () => {
         const datetime = formatDate(new Date(date_due))
         const newAssignment = {name: name, description: description, date_due: datetime, assignment_file: assignment_file, max_points: max_points }
         try{
-            await createAssignment({assignmentData: newAssignment, id: courseID, courseStoreActions})
+            await createAssignment({assignmentData: newAssignment, id: courseID, courseStoreActions : { addAssignmentInCourse}})
             fetchCourseDetails(courseID);
             navigate(`/courses/${courseID}`)
         }catch(error){

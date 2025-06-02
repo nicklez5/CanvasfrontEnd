@@ -3,7 +3,7 @@ import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 import { PiAlignCenterHorizontalSimple } from 'react-icons/pi';
 export const lectureStore = { lecture : {
-    id: '',
+    id: 0,
     description: '',
     name: '',
     file: ''
@@ -16,7 +16,7 @@ export const lectureStore = { lecture : {
     fetchLecture: thunk(async(actions, lectureID) => {
         actions.setLoading(true)
         try{
-            const response = await api.get(`/lecture/detail/${lectureID}/`)
+            const response = await api.get(`/lectures/detail/${lectureID}/`)
             actions.setLecture(response.data)
             actions.setError(null)
         }catch(error){
@@ -34,20 +34,25 @@ export const lectureStore = { lecture : {
     // Optional: Update assignment
     updateLecture: thunk(async (actions, { updatedData, id , courseStoreActions }) => {
         const formData = new FormData();
-        formData.append('file',updatedData.file)
+        if(updatedData.file !== null){
+            formData.append('file',updatedData.file)
+        }
         formData.append("name",updatedData.name)
         formData.append("description",updatedData.description)
         actions.setLoading(true);
         try {
             const response = await api.put(`/lectures/update/${updatedData.id}/`, formData)
             actions.setLecture(response.data);
-            courseStoreActions.updateLecturesInCourse({
+            courseStoreActions.updateLectureInCourse({
             courseId: id,   // Pass course_id to ensure it updates the correct course
             updatedLecture: response.data,
         });
             actions.setError(null);
+            return { success: true };
         } catch (err) {
             actions.setError(err.message);
+            console.error("Failed to update lecture:", err);
+            return { success: false, error: err.response?.data || err.message };
         } finally {
             actions.setLoading(false);
         }
@@ -69,10 +74,12 @@ export const lectureStore = { lecture : {
             const linkData = { id: lecture.id };
             await api.post(`/courses/lectures/${id}/`, linkData);
 
+            if (courseStoreActions && courseStoreActions.addLectureInCourse) {
             courseStoreActions.addLectureInCourse({
                 courseId: id,
                 updatedLecture: lecture,
             });
+        }
 
             actions.setError(null);
         } catch (err) {
@@ -82,13 +89,9 @@ export const lectureStore = { lecture : {
         }
         }),
 
-    deleteLecture: thunk(async(actions,{id, lectureID,courseStoreActions}) => {
+    deleteLecture: thunk(async(actions,{lectureID}) => {
         actions.setLoading(true);
         try {
-          courseStoreActions.removeLectureFromCourse({
-             courseId: id,
-             lectureId: lectureID
-          })
           await api.delete(`/lectures/delete/${lectureID}/`);
           actions.setLecture({});
            // Reset the Lecture state after deletion

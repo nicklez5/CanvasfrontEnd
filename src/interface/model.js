@@ -10,7 +10,7 @@ import { messageStore } from './messageStore';
 import { testStore } from './testStore';
 import { threadStore } from './threadStore';
 import { userStore } from './userStore';
-
+import { submissionStore} from './submissionStore'
 const store = createStore({
     userStore: persist(userStore, {
         storage: localStorage,
@@ -40,5 +40,9 @@ const store = createStore({
         storage: localStorage,
         key: 'assignmentStore'
     }),
+    submissionStore: persist(submissionStore,{
+        storage: localStorage,
+        key: "submissionStore"
+    })
 })
 export default store

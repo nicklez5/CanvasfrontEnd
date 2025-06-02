@@ -7,7 +7,7 @@ const NewLecture = () => {
     const {courseID} = useParams() 
     const getCoursesByID = useStoreState((state) => state.courseStore.getCoursesById);
     const createLecture = useStoreActions((actions) => actions.lectureStore.createLecture)
-    const  {courseStoreActions} = useStoreActions((actions) => actions.courseStore)
+    const  {addLectureInCourse} = useStoreActions((actions) => actions.courseStore)
     const fetchCourseDetails = useStoreActions((actions) => actions.courseStore.fetchCourseDetails)
     const course = getCoursesByID(courseID)
     const [description, setDescription] = useState('')
@@ -18,7 +18,7 @@ const NewLecture = () => {
         e.preventDefault();
         const newLecture = {file: file, name: name, description: description}
         try{
-            await createLecture({LectureData: newLecture,id:courseID, courseStoreActions})
+            await createLecture({LectureData: newLecture,id:courseID, courseStoreActions : { addLectureInCourse}})
             fetchCourseDetails(courseID);
             navigate(`/courses/${courseID}`)
         }catch(error){

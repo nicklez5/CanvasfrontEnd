@@ -30,9 +30,9 @@ const Home = () => {
                 fetchError: error,
                 isLoading: loading
             }}>Enrolled Courses</Link></div>
-            <div className="Home_Tests"><Link to="/Courses"  style={{color: "white"}} >Browse Courses</Link></div>
+            <div className="Home_Tests"><Link to="/courses"  style={{color: "white"}} >Browse Courses</Link></div>
             <div className="Home_Settings"><Link to="/Profile" style={{color: "white"}}>Profile</Link></div>
-            <div className="Home_Threads"><Link to="/ChangePassword" style={{color: "white"}}>User Settings</Link></div>
+            <div className="Home_Threads"><Link to="/UserSettings" style={{color: "white"}}>User Settings</Link></div>
 
 
         </main>

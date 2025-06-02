@@ -9,9 +9,7 @@ export const courseStore = {
     addCourse: action((state, course123) => {
         state.courses = [...state.courses, course123];  // Immutable push
     }),
-    deleteCourse: action((state,courseID) => {
-        state.courses = state.courses.filter(a => a.id !== courseID)
-    }),
+
     coursesCount: computed((state) => state.courses.length),
     createCourse: thunk(async (actions, courseData) => {
         actions.setLoading(true);
@@ -26,7 +24,26 @@ export const courseStore = {
         actions.setLoading(false); // Reset loading state
         }
     }),
-
+    deleteCourse: thunk(async (actions, courseId) => {
+        actions.setLoading(true);
+        try {
+        // 1) Call the API to delete
+        await api.delete(`/courses/delete/${courseId}/`);
+        // 2) Remove from local store
+        actions.removeCourseFromState(courseId);
+        actions.setError(null);
+        return { success: true };
+        } catch (err) {
+        const msg = err.response?.data || err.message;
+        actions.setError(msg);
+        return { success: false, error: msg };
+        } finally {
+        actions.setLoading(false);
+        }
+    }),
+     removeCourseFromState: action((state, courseId) => {
+        state.courses = state.courses.filter((c) => c.id !== courseId);
+    }),
     fetchCourses: thunk(async(actions) => {
         actions.setLoading(true);
         try {
@@ -50,12 +67,11 @@ export const courseStore = {
         }
     }),
     getCoursesById: computed((state) => {
-    // This uses a more efficient approach by indexing courses by their id
-        const coursesById = state.courses.reduce((acc, course) => {
-        acc[course.id] = course;
-        return acc;
-        }, {});
-        return (id) => coursesById[id];
+    const byId = state.courses.reduce((acc, c) => {
+      acc[c.id] = c;
+      return acc;
+    }, {});
+    return (id) => byId[id] || null;
     }),
     setCourses: action((state,payload) => {
         state.courses = payload
@@ -258,25 +274,27 @@ export const courseStore = {
     }
     }),
     removeMessageFromThread: action((state, { courseId, threadId, messageId }) => {
-    // Update the courses array immutably
-    state.courses = state.courses.map(course => {
-        if (course.id === courseId) {
-            // Update the threads array immutably
+    state.courses = state.courses.map((course) => {
+        if (course.id !== courseId) return course;
+
+        return {
+        ...course,
+        threads: course.threads.map((thread) => {
+            if (thread.id !== threadId) return thread;
+
+            // Make sure `thread.list_of_messages` exists (fallback to empty array)
+            const existing = Array.isArray(thread.list_of_messages)
+            ? thread.list_of_messages
+            : [];
+
             return {
-                ...course,
-                threads: course.threads.map(thread => {
-                    if (thread.id === threadId) {
-                        // Update the messages array immutably
-                        return {
-                            ...thread,
-                            messages: thread.messages.filter(message => message.id !== messageId)  // Remove the message with the specified messageId
-                        };
-                    }
-                    return thread;  // Return thread unchanged if it doesn't match threadId
-                })
+            ...thread,
+            list_of_messages: existing.filter(
+                (message) => message.id !== messageId
+            ),
             };
-        }
-        return course;  // Return course unchanged if it doesn't match courseId
+        }),
+        };
     });
     }),
     

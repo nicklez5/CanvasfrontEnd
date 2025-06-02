@@ -1,90 +1,120 @@
 import React , {useState}from 'react'
 import axios from "axios"
 import { useStoreState,useStoreActions } from 'easy-peasy'
-import { useNavigate } from 'react-router-dom'
+import { Link,useNavigate, Navigate } from 'react-router-dom'
+import { Container, Form, Button, Spinner, Alert } from "react-bootstrap";
 const Register = () => {
+  const navigate = useNavigate()
+  const {loading, error,user} = useStoreState((state) => state.userStore)
+  const register = useStoreActions((actions) => actions.userStore.register)
   const [username, setUsername] = useState('')
   const [email,setEmail] = useState('')
   const [password, setPassword] = useState("")
   const [password2,setPassword2] = useState('')
-  const {loading, error} = useStoreState((state) => state.userStore)
-  const register = useStoreActions((actions) => actions.userStore.register)
-  const navigate = useNavigate()
-  const handleSubmit = async(e) => {
-    e.preventDefault()
-    if(password !== password2){
-      alert('Passwords do not match');
-      return;
-    }
-    const userData = {
+  const [role, setRole] = useState("Student");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
       username,
       email,
       password,
-      password2
+      password2,
+      role, // "Student" or "Staff"
+    };
+    const result = await register(payload);
+    if (result.success) {
+      // Optionally, redirect to home or profile
+      navigate("/login");
     }
-    await register(userData)
-    if(!error){
-      navigate("/")
-    }else{
-      console.error(error)
-    }
-    
-  }
+  };
+
   return (
-    <div className="registerForm">
-      <h2>Create an Account</h2>
-      {error && <p style={{color: "red"}}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div style={{marginTop: "23px", paddingBottom: "30px"}}>
-          <label htmlFor="username" style={{position: "relative", left: "25px", fontWeight: "bolder"}}>Username:</label>
-          <input
-            style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "40px"}}
+    <Container style={{ maxWidth: "500px" }} className="mt-5">
+      <h2 className="mb-4">Register</h2>
+
+      {error && (
+        <Alert variant="danger" className="mb-3">
+          {typeof error === "string" ? error : JSON.stringify(error)}
+        </Alert>
+      )}
+
+      <Form onSubmit={handleSubmit}>
+        {/* Username */}
+        <Form.Group controlId="regUsername" className="mb-3">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
             type="text"
-            id="username"
+            placeholder="Choose a username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            />
-        </div>
-        <div style={{marginTop: "15px", paddingBottom: "30px"}}>
-          <label htmlFor="email" style={{position: "relative", left: "45px",fontWeight: "bolder"}}>Email:</label>
-          <input
-             style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "80px"}}
-             type="email"
-             id="email"
-             value={email}
-             onChange={(e) => setEmail(e.target.value)}
-             required
-             />
-        </div>
-        <div style={{marginTop: "15px", paddingBottom: "30px"}}>
-          <label htmlFor="password" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Password:</label>
-          <input
-            style={{position: "relative",padding: "10px",marginLeft: "15px",paddingRight: "100px", left: "50px"}}
-             type="password"
-             id="password"
-             value={password}
-             onChange={(e) => setPassword(e.target.value)}
-             required
-             />
-        </div>
-        <div style={{marginTop: "15px", paddingBottom: "30px"}}>
-          <label htmlFor="password2" style={{position: "relative",left: "-35px",fontWeight: "bolder" }}>Confirm Password:</label>
-          <input
-            style={{position: "relative",padding: "10px",marginLeft: "-15px",paddingRight: "100px",left: "15px"}}
+          />
+        </Form.Group>
+
+        {/* Email */}
+        <Form.Group controlId="regEmail" className="mb-3">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </Form.Group>
+
+        {/* Password */}
+        <Form.Group controlId="regPassword" className="mb-3">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
-            id="password2"
+            placeholder="Choose a password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </Form.Group>
+
+        {/* Confirm Password */}
+        <Form.Group controlId="regPassword2" className="mb-3">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Re‐enter password"
             value={password2}
             onChange={(e) => setPassword2(e.target.value)}
             required
           />
-        </div>
-        <button className="submitBtn" type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-    </div>
-  )
-}
+        </Form.Group>
+
+        {/* Role Dropdown */}
+        <Form.Group controlId="regRole" className="mb-3">
+          <Form.Label>Select Role</Form.Label>
+          <Form.Select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
+            <option value="Student">Student</option>
+            <option value="Staff">Staff</option>
+          </Form.Select>
+        </Form.Group>
+
+        {/* Submit Button */}
+        <Button variant="primary" type="submit" style={{width: "200px" }}disabled={loading}>
+          {loading ? (
+            <>
+              <Spinner animation="border" size="sm" className="me-2" />
+              Registering…
+            </>
+          ) : (
+            "Register"
+          )}
+        </Button>
+      </Form>
+    </Container>
+  );
+};
+
 
 export default Register

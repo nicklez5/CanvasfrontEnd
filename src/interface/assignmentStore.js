@@ -2,15 +2,12 @@ import axios from 'axios';
 import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 export const assignmentStore = { assignment : {
-    id: '',
+    id: 0,
     name: '',
-    submitter: '',
     description: '',
     date_due : '',
     max_points: 0,
-    student_points: 0,
     assignment_file: '',
-    student_file: ''
 },
   loading: false,
   error: null,
@@ -43,39 +40,17 @@ export const assignmentStore = { assignment : {
       actions.setLoading(false);
     }
   }),
-  submitAssignment: thunk(async (actions, { assignmentData, courseID, assignmentID, courseStoreActions }) => {
-      const formData = new FormData();
-      formData.append("student_file", assignmentData.student_file);
-      formData.append("student_points", assignmentData.student_points);  // Optional score
-  
-      actions.setLoading(true);
-  
-      try {
-          // Step 1: Submit the assignment file (PUT request to backend)
-          const response = await api.put(`/assignments/submit/${assignmentID}/`, formData);
-          actions.setAssignment(response.data)
-          // Step 3: Update the frontend state (update the assignment in the course’s assignments)
-          courseStoreActions.updateAssignmentInCourse({
-              courseId: courseID,
-              updatedAssignment: response.data, // Updated test data returned from the API
-          });
-  
-          actions.setError(null);  // Clear any errors
-      } catch (error) {
-          actions.setError(error.message);  // Handle errors
-      } finally {
-          actions.setLoading(false);  // Stop loading
-      }
-  }),
+
   // Optional: Update assignment
   updateAssignment: thunk(async (actions, { updatedData,course_id , courseStoreActions }) => {
     const formData = new FormData();
-    formData.append('assignment_file',updatedData.assignment_file)
+    if(updatedData.assignment_file !== null){
+      formData.append('assignment_file',updatedData.assignment_file)
+    }
     formData.append("name",updatedData.name)
     formData.append("date_due",updatedData.date_due)
     formData.append("description",updatedData.description)
     formData.append("max_points",updatedData.max_points)
-    formData.append("student_points",updatedData.student_points)
     actions.setLoading(true);
     try {
       const response = await api.put(`/assignments/update/${updatedData.id}/`, formData)
@@ -85,8 +60,11 @@ export const assignmentStore = { assignment : {
         updatedAssignment: response.data,
     });
       actions.setError(null);
+      return { success: true };
     } catch (err) {
       actions.setError(err.message);
+      console.error("Failed to update Assignment:", err);
+      return { success: false, error: err.response?.data || err.message };
     } finally {
       actions.setLoading(false);
     }

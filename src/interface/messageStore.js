@@ -3,7 +3,7 @@ import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 import { PiAlignCenterHorizontalSimple } from 'react-icons/pi';
 export const messageStore = { message: {
-    id: "",
+    id: 0,
     author: "",
     body: "",
     timestamp: ''
@@ -17,13 +17,10 @@ export const messageStore = { message: {
         actions.setLoading(true)
         try{
             const response = await api.get(`/messages/detail/${messageID}/`)
-            
-            if(!response.ok){
-                throw new Error(`HTTP error! status: ${response.status}`)
-            }
             actions.setMessage(response.data)
             actions.setError(null)
         }catch(error){
+            console.error("Request failed:", error.response?.status);
             actions.setError(error.message)
         }finally{
             actions.setLoading(false)
@@ -39,7 +36,7 @@ export const messageStore = { message: {
     createMessage: thunk(async (actions, { threadId, messageData, courseId, courseStoreActions }) => {
         actions.setLoading(true);
         try {
-            const response = await api.post(`/threads/${threadId}/messages/`, messageData);
+            const response = await api.post(`/threads/add/${threadId}/messages/`, messageData);
             actions.setMessage(response.data)
             // Add the message to the thread in the course's state
             courseStoreActions.addMessageToThread({
@@ -56,12 +53,10 @@ export const messageStore = { message: {
         }
     }),
     updateMessage: thunk(async (actions, { threadId, messageId, messageData, courseId,courseStoreActions }) => {
-        const data = {
-            body: messageData
-        }
+
         actions.setLoading(true);
         try {
-            const response = await api.put(`/threads/${threadId}/messages/${messageId}/`, data);
+            const response = await api.put(`/threads/update/${threadId}/messages/${messageId}/`, messageData);
             actions.setMessage(response.data)
             // Update the message in the thread within the course state
             courseStoreActions.updateMessageInThread({
@@ -81,18 +76,20 @@ export const messageStore = { message: {
     deleteMessage: thunk(async (actions, { threadId, messageId, courseId,courseStoreActions }) => {
         actions.setLoading(true);
         try {
-            await api.delete(`/threads/${threadId}/messages/${messageId}/`);
-            actions.setMessage({})
-            // Remove the message from the thread in the course state
             courseStoreActions.removeMessageFromThread({
                 courseId: courseId,
                 threadId: threadId,
                 messageId: messageId,
             });
-
-            actions.setError(null);  // Clear error
+            await api.delete(`/threads/delete/${threadId}/messages/${messageId}/`);
+            actions.setMessage({})
+            // Remove the message from the thread in the course state
+            actions.setError(null);
+            return true
         } catch (err) {
-            actions.setError(err.message);  // Handle error
+            console.log(err.message)
+            actions.setError(err.message); 
+            return false // Handle error
         } finally {
             actions.setLoading(false);
         }
