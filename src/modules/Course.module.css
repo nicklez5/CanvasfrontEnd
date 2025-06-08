@@ -1,0 +1,14 @@
+.course:nth-child(odd){
+    position: relative;
+    border: 1px solid black;
+    padding: 100px;
+    color: white;
+    border-radius: 50px;
+}
+.course:nth-child(even){
+    position: relative;
+    border: 1px solid black;
+    padding: 100px;
+    color: white;
+    border-radius: 50px;
+}

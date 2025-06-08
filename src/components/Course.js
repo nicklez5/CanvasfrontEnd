@@ -6,12 +6,12 @@ const Course = ({course}) => {
 
   return (
 
-    <article className="course">
+    <div className="course">
         
         <Link to={`/courses/${course.id}`} state={{ course }}>
             <h2 style={{color: "white" ,textDecoration: "none" }}>{course.name}</h2>
         </Link>
-    </article>
+    </div>
 
   )
 }

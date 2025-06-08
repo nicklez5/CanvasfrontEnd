@@ -120,7 +120,7 @@ const EditLecture = () => {
   // ─── Render ─────────────────────────────────────────────────────────────────
   //
   return (
-    <Container className="mt-4" style={{ maxWidth: "800px", padding: "120px", backgroundColor: "#5BC0BE" }}>
+    <Container className="mt-4" style={{ maxWidth: "800px", padding: "140px", backgroundColor: "#5BC0BE" }}>
       <h2 style={{left: "150px"}}>Edit Lecture #{lectureID}</h2>
 
       {/* Show a spinner while we’re fetching the existing lecture */}

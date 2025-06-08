@@ -12,12 +12,17 @@ const LoginPage = () => {
   const [password, setPassword] = useState("")
   const fetchUser = useStoreActions((actions) => actions.userStore.fetchUser)
   const loggedIn = useStoreState((state) => state.userStore.loggedIn)
+  const {error} = useStoreState((state) => state.userStore)
   const login = useStoreActions((actions) => actions.userStore.fetchUser);
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password });
-      navigate('/home');
+      const success = await login({ email, password });
+      if(!success){
+        navigate('/login')
+      }else{
+         navigate('/home');
+      }
     } catch (err) {
       console.error(err);
     }
@@ -36,7 +41,11 @@ const LoginPage = () => {
           <form onSubmit={handleLogin} className="shadow-sm p-4 rounded bg-white">
             <h2 className="mb-3 text-center">Login to Your Account</h2>
             <p className="text-center text-muted mb-4">Welcome back!</p>
-
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Email address

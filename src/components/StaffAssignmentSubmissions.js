@@ -53,12 +53,12 @@ const StaffAssignmentSubmissions = () => {
   }
 
   return (
-    <div>
+    <div className="graded_assignments">
       <h2>Assignment #{assignmentId} Submissions</h2>
       {submissions.length === 0 ? (
         <p>No submissions yet.</p>
       ) : (
-        <Table striped bordered hover responsive>
+        <Table responsive="xl" hover bordered variant="dark">
           <thead>
             <tr>
               <th>Student</th>
@@ -78,6 +78,7 @@ const StaffAssignmentSubmissions = () => {
                   <a
                     href={`${sub.student_file}`}
                     target="_blank"
+                    style={{color: "white"}}
                   >
                     Download
                   </a>

@@ -1,0 +1,33 @@
+/* CreateCourseCard.module.css */
+
+.createCard {
+  background-color: #03081B;
+  border: 2px dashed #6c757d;  /* gray dashed border */
+  color: white;               /* gray text for title */
+  border-radius: 0.5rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.createCard:hover {
+  background-color: #f1f3f5;    /* slightly darker on hover */
+  border-color: #495057;        /* darker dashed border on hover */
+  color: #343a40;   
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;                   /* space to center the plus sign vertically */
+  font-size: 3rem;                 /* make the plus relatively large */
+  color: #6c757d;                  /* gray color for the plus sign */
+}
+
+.plusIcon {
+  user-select: none;               /* prevent selecting the plus character */
+}

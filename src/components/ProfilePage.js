@@ -2,7 +2,7 @@ import React , {useState,useEffect} from 'react'
 import api from '../api/courses'
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { useNavigate } from 'react-router-dom'
-
+import {Container,Form,Button,Spinner,Alert,Row,Col } from "react-bootstrap";
 export default function ProfilePage() {
   const profile = useStoreState((state) => state.userStore.profile);
   const updateProfile = useStoreActions(
@@ -69,7 +69,7 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit}>
                 {/* First Name */}
                 <div className="mb-3">
                   <label htmlFor="firstName" className="form-label">
@@ -122,13 +122,13 @@ export default function ProfilePage() {
                 <div className="d-grid">
                   <button
                     type="submit"
-                    className="btn btn-primary btn-profile"
+                    className="btn1 btn-primary btn-profile"
                     disabled={loading}
                   >
                     {loading ? 'Updating...' : 'Update Profile'}
                   </button>
                 </div>
-              </form>
+              </Form>
             </div>
           </div>
         </div>

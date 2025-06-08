@@ -60,7 +60,7 @@ const CoursePage = () => {
       // No submission yet
       return (
         <Link to={`/submitTest/${courseid}/${test.id}`}>
-          <Button size="sm">Submit Test</Button>
+          <button className="submitSubmissions" >Submit Test</button>
         </Link>
       );
     }
@@ -90,7 +90,7 @@ const CoursePage = () => {
       // No submission exists yet
       return (
         <Link to={`/submitAssignment/${id}/${assignment.id}`}>
-          <Button size="sm">Submit Assignment</Button>
+          <button className="submitSubmissions">Submit Assignment</button>
         </Link>
       );
     }
@@ -162,14 +162,18 @@ const CoursePage = () => {
     }
   }
   const handleDeleteThread = async(threadID2) => {
-    const success = await deleteThread({id: course.id, threadID: threadID2,courseStoreActions: { removeThreadFromCourse} })
-    if(success){
-      alert("Thread deleted successfully")
+    try{
+      const success = await deleteThread({id: course.id, threadID: threadID2,courseStoreActions: { removeThreadFromCourse} })
+      if(success){
+        alert("Deleted Thread successfully")
+      }else{
+        alert("Failed to Delete Thread your not the owner")
+      }
       fetchCourseDetails(id)
-    }else{
+    }catch(error){
       alert("Failed to delete Thread.")
-
     }
+    // const success = await deleteThread({id: course.id, threadID: threadID2,courseStoreActions: { removeThreadFromCourse} })
   }
   const handleAddAssignment = async([assignmentID, courseID]) => {
     saveAssignment([courseID, assignmentID])
@@ -184,7 +188,7 @@ const CoursePage = () => {
   const handleDelete = async () => {
     const confirmed = window.confirm("Are you sure you want to delete this course?");
     if (!confirmed) return;
-
+    
     const result = await deleteCourse(id);
     if (result.success) {
       // After deletion, go back to the main Courses list
@@ -227,8 +231,8 @@ const CoursePage = () => {
         <td>{test.max_points}</td>
         <td>{date2(test.date_due)}</td>   
         <td>{renderTestStatus(test)}</td>
-        <td><a href={`http://localhost:8000${test.test_file}`} style={{ color: "black" }} target="_blank">{test.test_file}</a></td>
-        <td>{ user.is_staff && ( <><Link to={`/editTest/${test.id}/${id}`}><button className="editButton">Edit Test</button></Link><button className="deleteButton" onClick={() => handleDeleteTest([test.id,id])}>Delete Test</button> <Link to={`/staff/tests/${test.id}/submissions`}><Button size="sm">View Submissions</Button></Link> </> )}</td>
+        <td style={{textAlign: "center"}}><a href={`http://localhost:8000${test.test_file}`} style={{ color: "white" }} target="_blank">{test.test_file}</a></td>
+        <td style={{textAlign: "center"}}>{ user.is_staff && ( <><Link to={`/editTest/${test.id}/${id}`}><button className="editButton">Edit Test</button></Link><button className="deleteButton" onClick={() => handleDeleteTest([test.id,id])}>Delete Test</button> <Link to={`/staff/tests/${test.id}/submissions`}><button className="viewSubmissions">View Submissions</button></Link> </> )}</td>
         </tr>
     )
   })
@@ -238,8 +242,8 @@ const CoursePage = () => {
         <td>{lecture.id}</td>
         <td>{lecture.description}</td>
         <td>{lecture.name}</td>
-        <td><a href={`http://localhost:8000${lecture.file}`} style={{ color: "black" }} target="_blank">{lecture.file}</a></td>
-        { user.is_staff ? ( <td><Link to={`/editLecture/${id}/${lecture.id}`}><button className="editButton">Edit Lecture</button></Link><button className="deleteButton" onClick={() => handleDeleteLecture(lecture.id)}>Delete Lecture</button></td>): null}
+        <td style={{textAlign: "center"}}><a href={`http://localhost:8000${lecture.file}`} style={{ color: "white" }} target="_blank">{lecture.file}</a></td>
+        { user.is_staff ? ( <td style={{textAlign: "center"}}><Link to={`/editLecture/${id}/${lecture.id}`}><button className="editButton">Edit Lecture</button></Link><button className="deleteButton" onClick={() => handleDeleteLecture(lecture.id)}>Delete Lecture</button></td>): <td></td>}
     </tr>
     )
   })
@@ -263,9 +267,9 @@ const CoursePage = () => {
       <td>{date2(assignment.date_due)}</td>
       <td>{renderAssignmentStatus(assignment)}</td>
       {/* Assignment File (everyone can see this) */}
-      <td>
+      <td style={{textAlign: "center"}}>
         <a
-          style={{ color: "black" }}
+          style={{ color: "white" }}
           href={`http://localhost:8000${assignment.assignment_file}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -273,7 +277,7 @@ const CoursePage = () => {
           {assignment.assignment_file}
         </a>
         </td>
-        <td>{ user.is_staff && ( <><Link to={`/editAssignment/${assignment.id}/${id}`}><button className="editButton">Edit Assignment</button></Link><button className="deleteButton" onClick={() => handleDeleteAssignment([assignment.id,id])}>Delete Assignment</button> <Link to={`/staff/assignments/${assignment.id}/submissions`}><Button size="sm">View Submissions</Button></Link> </> )}</td>
+        { user.is_staff ? ( <td><Link to={`/editAssignment/${assignment.id}/${id}`}><button className="editButton">Edit Assignment</button></Link><button className="deleteButton" onClick={() => handleDeleteAssignment([assignment.id,id])}>Delete Assignment</button> <Link to={`/staff/assignments/${assignment.id}/submissions`}><button className="viewSubmissions" >View Submissions</button></Link> </td> ) : <td></td>}
      
     </tr>
   );
@@ -287,27 +291,28 @@ const CoursePage = () => {
             <td>{profile.first_name}</td>
             <td> {profile.last_name}</td>
             <td>{profile.date_of_birth}</td>
-            <td>{ user.is_staff ? ( <><button className="deleteButton" style={{right: "40px"}} onClick={() => handleDeleteStudent(profile.id)}>Remove Student</button></>): null}</td>
+            <td>{ user.is_staff ? ( <><button className="deleteButton" style={{left: "10px"}} onClick={() => handleDeleteStudent(profile.id)}>Remove Student</button></>): null}</td>
         </tr>
     )
   })
   return (
     <main className="CoursePage">
-        <article className="course">
+        <article className="lectures">
             { course && 
             <>  
 
                 <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name}'s Lectures </h2>
-                { doIhaveIt === undefined ? <button className="addClass" onClick={() => handleAddCourse(course.id)}>Enroll Class</button> : <Button onClick={() => handleRemoveCourse(course.id)}>Unenroll class</Button>}
-                {user.is_staff ? ( <><Link to={`/addLecture/${id}`} ><button className="addButton" >Add Lecture</button></Link><button className="deleteClass" onClick={handleDelete}>Delete Class</button> </>) : null}
-                <Table hover>
+                { doIhaveIt === undefined ? <button className="addClass" onClick={() => handleAddCourse(course.id)}>Enroll Class</button> : <button className="removeClass" onClick={() => handleRemoveCourse(course.id)}>Unenroll class</button>}
+                {user.is_staff ? ( <button className="deleteClass" onClick={() => handleDelete(course.id)}>Delete Class</button> ) : null}
+                {user.is_staff ? ( <Link to={`/addLecture/${id}`}><button className="addButton">Add Lecture</button></Link>  ) : null}
+                <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
                             <th>Lecture ID</th>
                             <th>Description</th>
                             <th>Lecture Name</th>
-                            <th>Lecture File</th>
-                            <th>Actions</th>
+                            <th style={{textAlign: "center"}}>Lecture File</th>
+                            <th style={{textAlign: "center"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>{courseLectures}</tbody>
@@ -319,7 +324,7 @@ const CoursePage = () => {
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Assignments</h2>
             {user.is_staff ? ( <><Link to={`/addAssignment/${id}`} ><button className="addButton" >Add Assignment</button></Link> </>): null}
-                <Table hover>
+                <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
                             <th>Assignment ID</th>
@@ -327,9 +332,9 @@ const CoursePage = () => {
                             <th>Description</th>
                             <th>Max Points</th>
                             <th>Date Due</th>
-                            <th>Status</th>
-                            <th>Assignment File</th>
-                            <th>Actions</th>
+                            <th style={{textAlign: "center"}}>Status</th>
+                            <th style={{textAlign: "center"}}>Assignment File</th>
+                            <th style={{textAlign: "center"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>{courseAssignments}</tbody>
@@ -342,7 +347,7 @@ const CoursePage = () => {
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Tests</h2>
             {user.is_staff ? ( <><Link to={`/addTest/${id}`} ><button className="addButton" >Add Test</button></Link> </> ) : null}
-                <Table hover>
+                <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
                             <th>Test ID</th>
@@ -350,9 +355,9 @@ const CoursePage = () => {
                             <th>Description</th>
                             <th>Max Points</th>
                             <th>Date Due</th>
-                            <th>Status</th>
-                            <th>File</th>
-                            <th>Actions</th>
+                            <th style={{textAlign: "center"}}>Status</th>
+                            <th style={{textAlign: "center"}}>File</th>
+                            <th style={{textAlign: "center"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>{courseTests}</tbody>
@@ -375,18 +380,18 @@ const CoursePage = () => {
       {course.threads.length === 0 ? (
         <p style={{ textAlign: "center" }}>No threads yet. Create one above.</p>
       ) : (
-        <Table hover>
+        <Table responsive="xl" hover bordered variant="dark">
           <thead>
             <tr>
               <th>Thread ID</th>
               <th>Thread Title</th>
               <th>Thread Created At</th>
-              <th>Thread Actions</th>
+              <th style={{textAlign: "center"}}>Thread Actions</th>
               <th>Message ID</th>
               <th>Message Body</th>
               <th>Message Author</th>
               <th>Message Timestamp</th>
-              <th>Message Actions</th>
+              <th style={{textAlign: "center"}}>Message Actions</th>
             </tr>
           </thead>
 
@@ -479,7 +484,7 @@ const CoursePage = () => {
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center", paddingBottom: "45px"}}>Students</h2>
              
-                <Table hover>
+                <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
                             <th>Student ID</th>
@@ -487,7 +492,7 @@ const CoursePage = () => {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Date of Birth</th>
-                            <th>Actions</th>
+                            <th style={{textAlign: "center"}}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>{courseProfiles}</tbody>

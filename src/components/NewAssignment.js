@@ -42,9 +42,9 @@ const NewAssignment = () => {
             <h2>New Assignment</h2>
             <form className="newPostForm" style={{display: "flex", flexDirection:"column"}} onSubmit={handleSubmit}>
                 <div style={{marginTop: "23px", paddingBottom: "15px"}}>
-                <label htmlFor="postName" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Assignment Name:</label>
+                <label htmlFor="postName" style={{position: "relative", left: "45px",fontWeight: "bolder"}}>Assignment Name:</label>
                 <input
-                    style={{position: "relative",padding: "10px", marginLeft: "25px",paddingRight: "160px",left: "55px"}}
+                    style={{position: "relative",padding: "10px", marginLeft: "55px",paddingRight: "160px",left: "70px"}}
                     id="postName"
                     type="text"
                     required
@@ -55,7 +55,7 @@ const NewAssignment = () => {
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
                 <label htmlFor="postDate" style={{position: "relative", left: "15px",bottom: "-5px",fontWeight: "bolder"}}>Assignment Due Date:</label>
                 <input 
-                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "120px",left: "40px"}}
+                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "120px",left: "70px"}}
                     id="postDate"
                     type="datetime-local"
                     required
@@ -64,11 +64,11 @@ const NewAssignment = () => {
                 />
                 </div>
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postDescription" style={{position: "relative", left: "1px",bottom: "95px",fontWeight: "bolder"}}>Assignment Description:</label>
+                <label htmlFor="postDescription" style={{position: "relative", right: "15px",bottom: "95px",fontWeight: "bolder"}}>Assignment Description:</label>
                 <textarea
-                     style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "20px"}}
+                     style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "40px"}}
                     rows="10" 
-                    cols="50"
+                    cols="40"
                     id="postDescription"
                     type="text"
                     required
@@ -77,9 +77,9 @@ const NewAssignment = () => {
                 />
                 </div>
                 <div tyle={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postMaxPoints" style={{position: "relative", left: "2px",fontWeight: "bolder"}}>Assignment Max Points</label>
+                <label htmlFor="postMaxPoints" style={{position: "relative", right: "12px",fontWeight: "bolder"}}>Assignment Max Points:</label>
                 <input 
-                    style={{position: "relative",padding: "10px",marginLeft: "25px",paddingRight: "150px", left: "15px"}}
+                    style={{position: "relative",padding: "10px",marginLeft: "25px",paddingRight: "20px", left: "40px"}}
                     id="postMaxPoints"
                     type="number"
                     required
@@ -88,15 +88,15 @@ const NewAssignment = () => {
                     />
                 </div>
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
-                <label htmlFor="postFile" style={{position: "relative", left: "55px",fontWeight: "bolder"}}>Assignment File</label>
+                <label htmlFor="postFile" style={{position: "relative", left: "35px",fontWeight: "bolder"}}>Assignment File:</label>
                 <input 
-                    style={{position: "relative",padding: "40px",marginLeft: "15px",paddingRight: "150px", left: "50px"}}
+                    style={{position: "relative",padding: "40px",marginLeft: "15px",paddingRight: "150px", left: "70px"}}
                     id="postFile"
                     type="file"
                     onChange={(e) => setAssignmentFile(e.target.files[0])}
                     />
                 </div>
-                <button type="submit" className="submitBtn" style={{marginLeft: "120px" }}>Submit</button>
+                <button type="submit" className="submitBtn" style={{marginLeft: "120px", fontSize: "18px" }}>Submit</button>
             </form>
         </div>
     )

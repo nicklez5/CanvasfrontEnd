@@ -35,7 +35,7 @@ const NewThread = () => {
       <form className="newPostForm" onSubmit={handleSubmit}>
         <label htmlFor="threadTitle" style={{position: "relative", right: "40px"}}>Thread title: </label>
         <input
-              style={{paddingRight: "20px", textAlign: "center"}}
+              style={{padding: "15px", paddingRight: "40px"}}
               id="threadTitle"
               type="text"
               required
@@ -45,7 +45,7 @@ const NewThread = () => {
         <br/>
           
       <br/>
-      <button type="submit" style={{marginTop: "10px", position: "relative", left: "95px", padding: "10px", borderRadius: "10px", color: "black", backgroundColor: "#FFFFFF"}} disabled={loading}>
+      <button type="submit" className="submitBtn" style={{left: "120px", fontSize: "16px" }}disabled={loading}>
           {loading ? 'Creating...' : 'Create Thread'}
         </button>
       </form>

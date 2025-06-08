@@ -30,9 +30,9 @@ const NewLecture = () => {
             <h2>New Lecture</h2>
             <form className="newPostForm" style={{display: "flex", flexDirection:"column"}} onSubmit={handleSubmit}>
                 <div style={{marginTop: "23px", paddingBottom: "15px"}}>
-                <label htmlFor="postName" style={{position: "relative", left: "25px",fontWeight: "bolder"}}>Lecture Name: </label>
+                <label htmlFor="postName" style={{position: "relative", left: "45px",fontWeight: "bolder"}}>Lecture Name: </label>
                 <input
-                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "55px",paddingRight: "260px",left: "40px"}}
+                    style={{position: "relative",padding: "10px", marginLeft: "55px",paddingRight: "260px",left: "70px"}}
                     id="postName"
                     type="text"
                     required
@@ -43,9 +43,9 @@ const NewLecture = () => {
                 <div style={{marginTop: "15px", paddingBottom: "15px"}}>
                 <label htmlFor="postDescription" style={{position: "relative", left: "15px",bottom: "95px",fontWeight: "bolder"}}>Lecture Description:</label>
                 <textarea
-                    style={{textAlign: "center",position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "40px"}}
+                    style={{position: "relative",padding: "10px", marginLeft: "15px",paddingRight: "100px",left: "40px"}}
                     rows="10" 
-                    cols="50"
+                    cols="40"
                     id="postDescription"
                     type="text"
                     required
@@ -62,7 +62,7 @@ const NewLecture = () => {
                     onChange={(e) => setFile(e.target.files[0])}
                     />
                 </div>
-                <button type="submit" className="submitBtn" style={{marginLeft: "150px" }}>Submit</button>
+                <button type="submit" className="submitBtn" style={{marginLeft: "150px", fontSize: "18px" }}>Submit</button>
             </form>
         </div>
     )

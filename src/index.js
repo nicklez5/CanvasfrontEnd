@@ -31,6 +31,7 @@ import UserSettings from './components/UserSettings';
 import SubmitTest from './components/SubmitTest';
 import StaffTestSubmissions from './components/StaffTestSubmissions';
 import StaffAssignmentSubmissions from './components/StaffAssignmentSubmissions';
+import ViewGrades from './components/ViewGrades';
 // … import all your pages …
 
 const AppWrapper = () => {
@@ -66,6 +67,7 @@ const AppWrapper = () => {
           <Route path="gradeAssignment/:courseID/:assignmentID" element={<GradeAssignment/>}/>
           <Route path="staff/tests/:testId/submissions" element={<StaffTestSubmissions/>}/>
           <Route path="staff/assignments/:assignmentId/submissions" element={<StaffAssignmentSubmissions/>}/>
+          <Route path="courses/:courseID/grades" element={<ViewGrades/>}/>
           <Route path="UserSettings" element={<UserSettings/>}/>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

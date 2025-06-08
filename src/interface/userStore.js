@@ -185,6 +185,11 @@ export const userStore = {
         try {
             // Send login request to authenticate the user and get the token
             const response = await api.post(`/users/login/`, credentials);
+            if(response.status === HttpStatusCode.BadRequest){
+                actions.setError(response.data)
+                actions.setLoggedIn(false)
+                return {success : false, error: response.data}
+            }
             const { token, user_id } = response.data;
 
             // Store the token and user_id in localStorage for subsequent requests
@@ -204,7 +209,8 @@ export const userStore = {
             actions.setCanvas({list_courses: canvasResponse.data.list_courses, id : canvasResponse.data.id});  // Set canvas (courses) data in store
 
             actions.setError(null);
-            return userResponse.data;  // Return user data
+            return {success : true}
+            return userResponse.data; // Return user data
         } catch (error) {
             actions.setError(error.message);
         } finally {
@@ -245,6 +251,42 @@ export const userStore = {
     };
 
 }),
+    updateUsernameAndProfile: thunk( async ( actions, { username1, email1}) => {
+        actions.setLoading(true);
+        try{
+            const resp = await api.patch("/users/detail/",{
+                username: username1,
+                email: email1
+            });
+            actions.setUser(resp.data)
+            actions.setError(null);
+            return { success : true}
+        }catch(error){
+            actions.setError(error.message)
+            return { success : false, error : error.message}
+        }finally{
+            actions.setLoading(false)
+        }
+    }),
+    updateUserPassword: thunk(async(actions, {currentPw,newPw,confirmNewPw}) => {
+        actions.setLoading(true)
+        try{
+            const resp = await api.post("/users/change-password/", {
+                current_password: currentPw,
+                new_password: newPw,
+                confirm_new_password: confirmNewPw,
+            })
+            if(resp.status === HttpStatusCode.Ok){
+                actions.setError(null)
+                return {success : true}
+            }
+        }catch(error){
+            actions.setError(error.message)
+            return {success: false, error: error.message}
+        }finally{
+            actions.setLoading(false)
+        }
+    }),
     fetchUserCourses: thunk(async(actions) => {
         actions.setLoading(true);
         try {

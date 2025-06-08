@@ -1,0 +1,148 @@
+/* CourseCard.module.css */
+.courseCard{
+  border-radius: 8px;
+  padding: 0;
+  height: 100%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.courseCard:hover {
+  transform: translateY(-2px);
+}
+.cardHeader{
+  background-color: #03081B;
+  padding: 12px 16px;
+  position: relative;
+}
+.cardTitle{
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+}
+.titleInput{
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+.titleWrapper{
+  position: relative;
+}
+.titleEditIcon{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+.titleEditIcon:hover{
+  color: #111827;
+}
+.cardBody{
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.default {
+  background-color: #03081B; /* white */
+}
+.primary {
+  background-color: #03081B; /* a deeper blue */
+}
+.secondary {
+  background-color: #03081B; /* purple */
+}
+.danger {
+  background-color: #03081B; /* a deeper red */
+}
+
+/* (Hover still works across all variants) */
+
+.descriptionText{
+  font-size: 1rem;
+  color: white;
+  line-height: 1.4;
+  max-height: 4.2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 0;
+}
+
+.descriptionTextarea{
+  width: 100%;
+  min-height: 60px;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  resize: vertical;
+}
+.descriptionWrapper{
+  position: relative;
+  margin-bottom: 12px;
+}
+.descriptionEditIcon{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+.descriptionEditIcon:hover{
+  color: #111827;
+}
+/* Title/description styles are the same... */
+.title {
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #111827;
+}
+.description {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.4;
+  max-height: 4.2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.descriptionWrapper{
+  position: relative;
+  margin-bottom: 12px;
+}
+.descriptionEditIcon{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #6b7280;
+}
+.descriptionEditIcon:hover {
+  color: #111827;
+}
+.editButtons {
+  margin-top: 8px;
+  text-align: right;
+}
+.viewButton {
+  margin-top: auto;
+}

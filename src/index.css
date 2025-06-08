@@ -1,11 +1,16 @@
 #root{
-   width: 100%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
   border: 1px solid #333;
   box-shadow: 0px 0px 15px gray;
+  background-image: url("modules/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
 body {
   margin: 0;
@@ -15,6 +20,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
    padding-top: 56px;
+   height: 100%;
 }
 
 code {
@@ -30,6 +36,8 @@ code {
   flex-direction: column;
   border: 1px solid #333;
   box-shadow: 0px 0px 15px gray;
+  overflow: hidden;
+  height: 100%;
 }
 .Header a{
   color: white;
@@ -77,6 +85,7 @@ code {
   border: 1px solid black;
   padding: 100px;
   color: white;
+  border-radius: 50px;
 }
 .course:nth-child(1){
   background-color: #EF4444;
@@ -84,24 +93,28 @@ code {
   border: 1px solid black;
   padding: 100px;
   color: white;
+  border-radius: 50px;
 }
 .course:nth-child(2){
   background-color: #18181B;
   position:relative;
   border: 1px solid black;
   padding: 100px;
+  border-radius: 50px;
 }
 .course:nth-child(3){
   background-color:#3B3B43;
   position:relative;
   border: 1px solid black;
   padding: 100px;
+  border-radius: 50px;
 }
 .course:nth-child(4){
   background-color: #858594;
   position:relative;
   border: 1px solid black;
   padding: 100px;
+  border-radius: 50px;
   
 }
 td a{
@@ -117,6 +130,7 @@ td a{
   padding: 100px;
   background-color:#D4D4D8;
   color: black;
+  border-radius: 50px;
 }
 .course:nth-child(6){
   background-color: #8860EF;
@@ -124,7 +138,15 @@ td a{
   position:relative;
   border: 1px solid black;
   padding: 100px;
+  border-radius: 50px;
   
+}
+.lectures{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  color: white;
 }
 .assignments{
   background-color: #262730;
@@ -164,52 +186,139 @@ td a{
   padding: 30px;
   align-items:stretch;
 }
+.SubmitTest{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  height: auto;
+  margin-top: 25vh;
+  margin-bottom: 40vh;
+  color: white;
+}
+.SubmitTest h2{
+  margin-left: 60px;
+  margin-bottom: 40px;
+  position: relative;
+  font-family:sans-serif;
+  font-weight:400px;
+}
+.SubmitAssignment{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  height: auto;
+  margin-top: 25vh;
+  margin-bottom: 40vh;
+  color: white;
+}
+.SubmitAssignment h2{
+  margin-left: 40px;
+  margin-bottom: 40px;
+  position: relative;
+  font-family:sans-serif;
+  font-weight:400px;
+}
+.graded_assignments{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  height: auto;
+  margin-top: 25vh;
+  margin-bottom: 40vh;
+  color: white;
+}
+.graded_assignments h2{
+  margin-left: 40px;
+  margin-bottom: 40px;
+  position: relative;
+  font-family:sans-serif;
+  font-weight:400px;
+
+}
+.graded_tests{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  height: auto;
+  margin-top: 25vh;
+  margin-bottom: 40vh;
+  color: white;
+}
+.graded_tests h2{
+  margin-left: 40px;
+  margin-bottom: 40px;
+  position: relative;
+  font-family:sans-serif;
+  font-weight:400px;
+
+}
 .All_Courses{
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color:#ACECA1;
+  color: black;
+  font-weight: 200;
   padding: 10px;
-  right: 10px;
-  display: relative;
-  
+  left: 60vh;
+  position: relative;
+  margin-top: 25px;
   
 }
 .addClass{
-  position:absolute;
-  left: 570px;
-  background-color: #DB3F29;
+  display: inline-block;
+  background-color: #00B25A;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  padding: 15px;
+  padding: 10px;
   color: white;
   margin-left: 20px;
   border-radius: 10px;
+}
+.addClass:hover{
+  background-color: #3CB35A;
+  color: white;
+}
+.addClass:active{
+  background-color: #3CB35A;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 .removeClass{
-  position:absolute;
-  left: 570px;
-
+  display: inline-block;
   border-radius: 10px;
   margin-left: 20px;
-  padding: 15px;
-  background-color: #5BC0BE;
+  padding: 10px;
+  background-color: #DA6464;
   color: white;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+.removeClass:hover{
+  background-color: #DC6E7C;
+  color: white;
+}
+.removeClass:active{
+  background-color: #DC6E7C;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
 .Courses{
+  padding-top: 45px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 45px;
-  padding-bottom: 87vh;
-  margin-left: 54px;
+  padding-bottom: 57vh;
+  width:100%;
 }
 .addButton{
   position:sticky;
   bottom: 1050px;
-  left: 1500px;
+  left: 1600px;
   display: inline-block;
-  background-color: #1B2F33;
+  background-color: #69D1A2;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  padding: 20px;
+  padding: 15px;
   color: white;
   border-radius: 15px;
 }
@@ -241,7 +350,7 @@ td a{
   border-radius: 15px;
 }
 .container{
-  padding-bottom: 35vh;
+  padding-bottom: 65vh;
 }
 .container h2{
   position: relative;
@@ -287,61 +396,6 @@ td a{
   margin-top: 25px;
 }
 
-.Home_Courses, .Home_Threads, .Home_Tests, .Home_Settings, .Home_Courses1{
-  border: 1px solid white;
-  position: relative;
-  bottom: 55px;
-  height: 100px;
-  width: 150px;
-  display: flex;
-  flex-wrap: nowrap;
-  padding: 140px;
-  grid-template-columns: auto auto auto auto;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 13px;
-  right: 75vh;
-  
-  background-color:#aaefdf;
-}
-.homecourse{
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
-  margin-top: 200px;
-  margin-left: 1525px;
-  justify-content: space-between;
-}
-.Home_Courses{
-  background-color: #F59E0B;
-  margin: 0px 25px;
-}
-
-.Home_Threads{
-  background-color: #4747cb;
-  color: white;
-  margin: 0px 25px;
-}
-.Home_Tests{
-  background-color: #3A3A42;
-  color: white;
-  margin: 0px 25px;
-}
-.Home_Settings{
-  background-color: #03012C;
-  color: white;
-  margin: 0px 25px;
-}
-.HomeCourses{
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  bottom: -355px;
-  margin-top: 15px;
-  height: 120vh;
-  ;
-}
 .Home_Courses1{
   display: flex;
   flex-direction: column;
@@ -361,6 +415,26 @@ td a{
   top: 35px;
   left: 225px;
 }
+.ViewGrades{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 15vh;
+  margin-bottom: 50vh;
+  justify-content: center;
+  height: auto;
+  padding: 125px;
+  background-color: #0F172A;
+  color: white;
+  border-radius: 60px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+.ViewGrades h2{
+  position: static;
+  text-align: center;
+  font-weight:bolder;
+  margin-bottom: 10px;
+}
 .NewLecture{
   display: flex;
   flex-direction: column;
@@ -369,14 +443,18 @@ td a{
   margin-bottom:50vh;
   justify-content: center;
   height: auto;
-  padding: 105px;
-  background-color: #F59E0B;
+  padding: 125px;
+  background-color: #0F172A;
+  color: white;
+  border-radius: 60px;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewLecture h2{
   position: relative;
-  font-family:sans-serif;
+  font-family:'Courier New', Courier, monospace;
   left: 300px;
-  font-weight:400px;
+  font-weight:bolder;
+  color: white;
 }
 .registerForm{
   width: 400px;
@@ -438,13 +516,16 @@ td a{
   justify-content: center;
   height: auto;
   padding: 105px;
-  background-color: #DB3F29;
+  border-radius: 60px;
+  background-color: #0F172A;
+  color: white;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewAssignment h2{
   position: relative;
-  font-family:sans-serif;
   left: 250px;
-  font-weight:400px;
+  font-weight:bolder;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewTest{
   display: flex;
@@ -455,13 +536,16 @@ td a{
   justify-content: center;
   height: auto;
   padding: 105px;
-  background-color: #AC58F5;
+  border-radius: 40px;
+  background-color: #0F172A;
+  color: white;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewTest h2{
   position: relative;
-  font-family:sans-serif;
   left: 250px;
-  font-weight:400px;
+  font-weight:bolder;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewThread{
   display: flex;
@@ -473,13 +557,18 @@ td a{
   justify-content: center;
   height: auto;
   padding: 145px;
-  background-color: #F29559;
+  background-color: #0F172A;
+  border-radius: 40px;
+  color: white;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewThread h2{
   position: absolute;
-  font-family:sans-serif;
+
   top: 65px;
-  left: 195px;
+  left: 235px;
+  font-weight:bolder;
+  font-family:'Courier New', Courier, monospace;
 }
 .NewMessage{
   display: flex;
@@ -548,15 +637,23 @@ td a{
   border-radius: 15px;
 }
 .deleteClass{
-  position: absolute;
-  left: 445px;
-  background-color: #0F203A;
+  display: inline-block;
+  background-color: #E34A32;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  padding: 15px;
-  margin-right: 20px;
+  padding: 10px;
+  margin-left: 20px;
   margin-bottom: 20px;
   color: white;
   border-radius: 15px
+}
+.deleteButton{
+  position: relative;
+  margin-left: 20px;
+  background-color:#DC6E7C;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  color: white;
+  border-radius: 15px;
 }
 .grades{
   position: absolute;
@@ -568,4 +665,25 @@ td a{
   margin-bottom: 20px;
   color: white;
   border-radius: 15px
+}
+.viewSubmissions{
+  display: inline-block;
+  margin-left: 20px;
+  background-color:#133D5F;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  color: white;
+  border-radius: 15px;
+}
+.submitSubmissions{
+  display: inline-block;
+  background-color:#133D5F;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  color: white;
+  border-radius: 15px;
+}
+.submitSubmissions:hover{
+  background-color: #339989;
+  color: white;
 }

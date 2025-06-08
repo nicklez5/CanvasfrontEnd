@@ -55,18 +55,18 @@ const SubmitAssignment = () => {
   };
 
   return (
-    <div>
+    <div className="SubmitAssignment">
       <h2>Submit Assignment</h2>
       {error && <Alert variant="danger">{JSON.stringify(error)}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="fileUpload" className="mb-3">
-          <Form.Label>Upload your work</Form.Label>
+          <Form.Label  style={{marginLeft: "70px"}}>Upload your assignment File</Form.Label>
           <Form.Control
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" disabled={loading || !file}>
+        <Button variant="primary" type="submit" style={{marginLeft: "120px"}} disabled={loading || !file}>
           {loading ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />

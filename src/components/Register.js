@@ -30,7 +30,7 @@ const Register = () => {
 
   return (
     <Container style={{ maxWidth: "500px" }} className="mt-5">
-      <h2 className="mb-4">Register</h2>
+      <h2 className="mb-4" style={{color: "white", marginLeft: "150px"}}>Register</h2>
 
       {error && (
         <Alert variant="danger" className="mb-3">
@@ -38,11 +38,12 @@ const Register = () => {
         </Alert>
       )}
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} style={{color: "white"}}>
         {/* Username */}
         <Form.Group controlId="regUsername" className="mb-3">
           <Form.Label>Username</Form.Label>
           <Form.Control
+            style={{marginLeft: "4px"}}
             type="text"
             placeholder="Choose a username"
             value={username}
@@ -55,6 +56,7 @@ const Register = () => {
         <Form.Group controlId="regEmail" className="mb-3">
           <Form.Label>Email address</Form.Label>
           <Form.Control
+            style={{marginLeft: "4px"}}
             type="email"
             placeholder="Enter your email"
             value={email}
@@ -67,6 +69,7 @@ const Register = () => {
         <Form.Group controlId="regPassword" className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control
+            style={{marginLeft: "4px"}}
             type="password"
             placeholder="Choose a password"
             value={password}
@@ -79,6 +82,7 @@ const Register = () => {
         <Form.Group controlId="regPassword2" className="mb-3">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
+            style={{marginLeft: "4px"}}
             type="password"
             placeholder="Re‐enter password"
             value={password2}
@@ -91,6 +95,7 @@ const Register = () => {
         <Form.Group controlId="regRole" className="mb-3">
           <Form.Label>Select Role</Form.Label>
           <Form.Select
+            style={{marginLeft: "4px"}}
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
@@ -101,7 +106,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Submit Button */}
-        <Button variant="primary" type="submit" style={{width: "200px" }}disabled={loading}>
+        <Button variant="primary" type="submit" style={{width: "200px", marginLeft: "140px" }}disabled={loading}>
           {loading ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />

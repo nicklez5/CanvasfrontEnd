@@ -30,7 +30,7 @@ const Header = ({title}) => {
   }
   const { width} = useWindowSize();
   return (
-     <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow">
+     <nav className="navbar navbar-expand-lg navbar-dark fixed-top shadow" style={{backgroundColor: "rgb(11,15,25"}}>
       <div className="container-fluid">
         <Link className="navbar-brand" to={loggedIn ? '/home' : '/'}>{title}</Link>
         <button

@@ -1,0 +1,92 @@
+.Home_Courses, .Home_Threads, .Home_Tests, .Home_Settings, .UserCourses{
+  border: 1px solid white;
+  position: relative;
+  bottom: 55px;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 140px;
+  grid-template-columns: auto auto auto auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 13px;
+  right: 75vh;
+  background-color:#aaefdf;
+}
+.homecourse{
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  margin-top: 250px;
+  margin-left: 1325px;
+  justify-content: space-between;
+}
+.UserCourses{
+  background-color: #03081B;
+  color: white;
+  margin: 0px 25px;
+  border-radius: 65px;
+}
+@keyframes jump-animation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); 
+  }
+  100% {
+    transform: translateY(0); 
+  }
+}
+.UserCourses:hover{
+  animation-name: jump-animation;
+  animation-duration: 0.5s; 
+  animation-timing-function: ease; 
+  animation-iteration-count: 1; 
+}
+.Home_Courses{
+  background-color: #03081B;
+  color: white;
+  margin: 0px 25px;
+  border-radius: 65px;
+}
+.Home_Courses:hover{
+  animation-name: jump-animation;
+  animation-duration: 0.5s; 
+  animation-timing-function: ease; 
+  animation-iteration-count: 1; 
+}
+.Home_Threads{
+  background-color: #03081B;
+  color: white;
+  margin: 0px 25px;
+  border-radius: 65px;
+}
+.Home_Threads:hover{
+  animation-name: jump-animation;
+  animation-duration: 0.5s; 
+  animation-timing-function: ease; 
+  animation-iteration-count: 1; 
+}
+.Home_Settings{
+  background-color: #03081B;
+  color: white;
+  margin: 0px 25px;
+  border-radius: 65px;
+}
+.Home_Settings:hover{
+  animation-name: jump-animation;
+  animation-duration: 0.5s; 
+  animation-timing-function: ease; 
+  animation-iteration-count: 1; 
+}
+.HomeCourses{
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  margin-top: 10px;
+  height: 120vh;
+  background-image: url("bg.jpg")
+}

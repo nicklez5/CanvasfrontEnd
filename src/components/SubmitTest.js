@@ -44,8 +44,8 @@ const SubmitTest = () => {
 
     const formData = new FormData();
     formData.append("student_file", file);
-
-    const result = await createTestSub({ testID, formData });
+    const test_id = parseInt(testID, 10)
+    const result = await createTestSub({ testId: test_id, formData: formData });
 
     if (result.success) {
       await fetchStudentTestGrades({ courseID, studentId });
@@ -59,13 +59,13 @@ const SubmitTest = () => {
       {error && <Alert variant="danger">{JSON.stringify(error)}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="fileUpload" className="mb-3">
-          <Form.Label>Upload your test file</Form.Label>
+          <Form.Label style={{marginLeft: "80px"}}>Upload your test file</Form.Label>
           <Form.Control
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" disabled={loading || !file}>
+        <Button variant="primary" type="submit" style={{marginLeft: "120px"}}disabled={loading || !file}>
           {loading ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />

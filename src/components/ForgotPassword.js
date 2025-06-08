@@ -46,7 +46,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="container my-5">
+    <div className="container my-5" style={{paddingTop: "120px"}}>
       <div className="row justify-content-center">
         <div className="col-12 col-md-6 col-lg-5">
           <div className="card shadow-sm">
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
+                  <label htmlFor="email" className="form-label" style={{left: "20px"}}>
                     Email address
                   </label>
                   <input
@@ -81,6 +81,7 @@ export default function ForgotPassword() {
                 <div className="d-grid mb-3">
                   <button
                     type="submit"
+                    style={{position: "relative", left: "150px"}}
                     className="btn btn-primary btn-reset"
                     disabled={loading}
                   >

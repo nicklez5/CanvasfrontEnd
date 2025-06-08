@@ -1,0 +1,29 @@
+.container{
+  position:fixed;
+  background-color: #0B0E16;
+  box-sizing: content-box;
+  width: 100%;
+  overflow:hidden;
+  padding: 100px;
+  height: 100%;
+  background-image: url("bg.jpg")
+}
+.h1{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color:white;
+  margin-bottom: 40px;
+}
+.main{
+  padding-top: 45px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 45px;
+  padding-bottom: 57vh;
+  justify-content: center;
+  align-items: center;
+}

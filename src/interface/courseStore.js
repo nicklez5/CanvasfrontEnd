@@ -15,13 +15,15 @@ export const courseStore = {
         actions.setLoading(true);
         try {
         // Make an API call to create the course
-        const response = await api.post('/courses/post/', courseData); // Endpoint to create a course
-        actions.addCourse(response.data); // Add the newly created course to the store
-        actions.setError(null); // Reset error state
+            const response = await api.post('/courses/post/', courseData); // Endpoint to create a course
+            actions.addCourse(response.data); // Add the newly created course to the store
+            actions.setError(null); 
+            return { success: true };// Reset error state
         } catch (error) {
-        actions.setError(error.message); // Set error message
+            actions.setError(error.message);
+            return { success: false, error: error.message }; // Set error message
         } finally {
-        actions.setLoading(false); // Reset loading state
+            actions.setLoading(false); // Reset loading state
         }
     }),
     deleteCourse: thunk(async (actions, courseId) => {
@@ -331,18 +333,33 @@ export const courseStore = {
     }),
     setCourseDetails: action((state, { courseId, updatedCourseData }) => {
     // Use map to create a new courses array with the updated course
-    state.courses = state.courses.map(course => {
-        if (course.id === courseId) {
-            // Return the updated course by merging the existing course data with the new data
-            return { ...course, ...updatedCourseData };
-        }
-        return course;  // If the course doesn't match, return it unchanged
+        state.courses = state.courses.map(course => {
+            if (course.id === courseId) {
+                // Return the updated course by merging the existing course data with the new data
+                return { ...course, ...updatedCourseData };
+            }
+            return course;  // If the course doesn't match, return it unchanged
     });
     }),
-    updateCourse: action((state, { courseId, updatedCourse }) => {
-    const courseIndex = state.courses.findIndex(course => course.id === courseId);
-        if (courseIndex !== -1) {
-            state.courses[courseIndex] = updatedCourse;  // Replace the old course data with updated data
+    updateCourse: thunk(async (actions, {courseId,newName, newDescription}) => {
+        actions.setLoading(true)
+        try{
+            const response = await api.put(`/courses/update/${courseId}/`,{
+                name: newName,
+                description: newDescription
+            });
+            const updated = response.data
+            actions.setCourseDetails({
+                courseId,
+                updatedCourseData: updated,
+            })
+            actions.setError(null)
+            return {success : true};
+        }catch(err){
+            actions.setError(err.response?.data || err.message);
+            return {success: false, error: err.response?.data || err.message}
+        }finally{
+            actions.setLoading(false)
         }
     }),
 
@@ -387,57 +404,7 @@ export const courseStore = {
     setError: action((state, payload) => {
         state.error = payload;
     }),
-    updateCourseName: thunk(async (actions, { course_id, newCourseName }, helpers) => {
-    const course = helpers.getState().courseStore.courses.find(c => c.id === course_id);  // Get the current course from state
-
-    // If the course doesn't exist, log an error and exit
-    if (!course) {
-        actions.setError('Course not found!');
-        return;
-    }
-
-    // Prepare the data to send to the API
-    const data = { name: newCourseName };
-
-    actions.setLoading(true);  // Set loading to true
-
-    try {
-        // Optimistically update the course name in the store
-        actions.updateCourse({
-            courseId: course_id,
-            updatedCourse: { ...course, name: newCourseName }
-        });
-
-        // Make the API call to update the course name
-        const response = await api.put(`/courses/update/${course_id}/`, data);
-
-        // If the response is successful, update the course with the data returned from the API
-        if (response.status === 200) {
-            actions.updateCourse({
-                courseId: course_id,
-                updatedCourse: response.data
-            });
-            actions.setError(null);  // Clear any previous errors
-        } else {
-            // Handle unexpected API response
-            throw new Error(`Unexpected response status: ${response.status}`);
-        }
-
-    } catch (err) {
-        // Log the error and update the error state
-        console.log(`Error: ${err.message}`);
-        actions.setError(err.message);  // Store the error message in the state
-
-        // Optionally revert the course name back if the update fails
-        actions.updateCourse({
-            courseId: course_id,
-            updatedCourse: course  // Revert the course to its original state
-        });
-    } finally {
-        actions.setLoading(false);  // Set loading to false
-    }
-}),
-
+    
     // Optional: Update assignment
     
     updateAssignmentInCourse: action((state, { courseId, updatedAssignment }) => {

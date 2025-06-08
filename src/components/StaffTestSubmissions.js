@@ -53,7 +53,7 @@ const StaffTestSubmissions = () => {
   }
 
   return (
-    <div>
+    <div className="graded_tests">
       <h2>Test #{testId} Submissions</h2>
       {submissions.length === 0 ? (
         <p>No submissions yet.</p>
@@ -76,9 +76,10 @@ const StaffTestSubmissions = () => {
                 <td>{new Date(sub.submitted_at).toLocaleString()}</td>
                 <td>
                   <a
-                    href={`http://localhost:8000${sub.student_file}`}
+                    href={`${sub.student_file}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    style={{color: "black"}}
                   >
                     Download
                   </a>

@@ -1,0 +1,27 @@
+.container{
+  position:fixed;
+  background-color: #0B0E16;
+  box-sizing: content-box;
+  width: 100%;
+  overflow:hidden;
+  padding: 100px;
+  height: 100%;
+  background-image: url("bg.jpg")
+  
+}
+.h1{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color:white;
+  margin-bottom: 40px;
+}
+.form_label{
+  display: inline-block;
+  color: white;
+  justify-content: center;
+  text-align: center;
+  left: 10px;
+}

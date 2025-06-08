@@ -139,7 +139,7 @@ export const submissionStore = {
     actions.setLoading(true);
     try {
       const res = await api.get(`/tests/${testId}/submissions/`);
-      actions.setTestSubmissions(res.data);
+      actions.setTestSubmissions(res.data.results);
       actions.setError(null);
     } catch (err) {
       actions.setError(err.response?.data || err.message);

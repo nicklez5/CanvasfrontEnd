@@ -14,10 +14,10 @@ function App() {
 
      return (
 
-      <div className="App">
+        <>
         <Header title="Canvas" />
         <Outlet />
-      </div>
+        </>
   );
 
 }
