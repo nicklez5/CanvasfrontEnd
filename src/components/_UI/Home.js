@@ -1,9 +1,9 @@
 import {React, useEffect, useState} from 'react'
 import { useStoreActions, useStoreState } from 'easy-peasy'
-import useAxiosFetch from '../hooks/useAxiosFetch'
+import useAxiosFetch from '../../hooks/useAxiosFetch'
 import { useNavigate,Link } from 'react-router-dom'
-import {api} from "./../api/courses"
-import styles from "../modules/HomeCard.module.css"
+import {api} from "../../api/courses"
+import styles from "./modules/HomeCard.module.css"
 const Home = () => {
   const id = localStorage.getItem("pk")
   const {canvas,user} = useStoreState((state) => state.userStore)

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
 import CourseCard from "./CourseCard";
 import CreateCourseCard from "./CreateCourseCard";
-import styles from "../modules/Courses.module.css"
+import styles from "./modules/Courses.module.css"
 const CoursesGrid = () => {
   const navigate     = useNavigate();
   const fetchCourses = useStoreActions((a) => a.courseStore.fetchCourses);

@@ -4,7 +4,7 @@ import { useStoreState, useStoreActions} from "easy-peasy"
 import {Table,Button,Modal,Spinner} from "react-bootstrap"
 import { fr } from 'date-fns/locale/fr';
 import {format , formatInTimeZone} from 'date-fns-tz'
-import api from '../api/courses';
+import api from '../../api/courses';
 
 const ViewGrades = () => {
   const [showModal, setShowModal] = useState(false);

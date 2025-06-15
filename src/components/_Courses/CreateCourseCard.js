@@ -2,7 +2,7 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import styles from "../modules/CreateCourseCard.module.css"; // (we’ll define this below)
+import styles from "./modules/CreateCourseCard.module.css"; // (we’ll define this below)
 
 const CreateCourseCard = () => {
   const navigate = useNavigate();

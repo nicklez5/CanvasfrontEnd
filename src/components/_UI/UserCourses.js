@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react'
 import { useStoreState, useStoreActions } from 'easy-peasy'
-import CoursesFeed from './CoursesFeed'
+import CoursesFeed from '../_Courses/CoursesFeed'
 import { useLocation, useNavigate } from 'react-router-dom'
-import styles from '../modules/UserCourses.module.css'
-import CourseCard from './CourseCard'
+import styles from './modules/UserCourses.module.css'
+import CourseCard from '../_Courses/CourseCard'
 const UserCourses = () => {
   const navigate = useNavigate();
   const fetchCourses = useStoreActions((actions) => actions.courseStore.fetchCourses);

@@ -1,14 +1,15 @@
 import { useParams, Link, useLocation} from "react-router-dom"
 import { useNavigate} from "react-router-dom"
 import { useStoreState, useStoreActions ,useStoreRehydrated} from "easy-peasy"
-import { Table, Button, Spinner } from "react-bootstrap"
+import { Table, Button, Spinner, Dropdown } from "react-bootstrap"
 import { useEffect,useState, useContext } from "react"
-import useAxiosFetch from '../hooks/useAxiosFetch';
+import useAxiosFetch from '../../hooks/useAxiosFetch';
+import styles from "./modules/CoursePage.module.css"
 import {parseISO } from "date-fns"
 import { fr   } from 'date-fns/locale/fr';
 import { format,formatInTimeZone } from 'date-fns-tz';
 import axios from "axios"
-import api from "../api/courses"
+import api from "../../api/courses"
 import fileDownload from 'react-file-download';
 const CoursePage = () => {
   const {id} = useParams()
@@ -60,7 +61,7 @@ const CoursePage = () => {
       // No submission yet
       return (
         <Link to={`/submitTest/${courseid}/${test.id}`}>
-          <button className="submitSubmissions" >Submit Test</button>
+          <Button className={styles.submitSubmissions} >Submit Test</Button>
         </Link>
       );
     }
@@ -90,7 +91,7 @@ const CoursePage = () => {
       // No submission exists yet
       return (
         <Link to={`/submitAssignment/${id}/${assignment.id}`}>
-          <button className="submitSubmissions">Submit Assignment</button>
+          <Button className={styles.submitSubmissions}>Submit Assignment</Button>
         </Link>
       );
     }
@@ -243,7 +244,17 @@ const CoursePage = () => {
         <td>{lecture.description}</td>
         <td>{lecture.name}</td>
         <td style={{textAlign: "center"}}><a href={`http://localhost:8000${lecture.file}`} style={{ color: "white" }} target="_blank">{lecture.file}</a></td>
-        { user.is_staff ? ( <td style={{textAlign: "center"}}><Link to={`/editLecture/${id}/${lecture.id}`}><button className="editButton">Edit Lecture</button></Link><button className="deleteButton" onClick={() => handleDeleteLecture(lecture.id)}>Delete Lecture</button></td>): <td></td>}
+        { user.is_staff ? 
+            ( 
+            <Dropdown>
+              <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "relative" ,textAlign: "center", left: "55px"}}>
+                Options
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item className={styles.dropdown_item} href={`/editLecture/${id}/${lecture.id}`}>Edit Lecture</Dropdown.Item>
+                <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteLecture(lecture.id)}>Delete Lecture</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown> ) : <td></td>} 
     </tr>
     )
   })
@@ -277,7 +288,19 @@ const CoursePage = () => {
           {assignment.assignment_file}
         </a>
         </td>
-        { user.is_staff ? ( <td><Link to={`/editAssignment/${assignment.id}/${id}`}><button className="editButton">Edit Assignment</button></Link><button className="deleteButton" onClick={() => handleDeleteAssignment([assignment.id,id])}>Delete Assignment</button> <Link to={`/staff/assignments/${assignment.id}/submissions`}><button className="viewSubmissions" >View Submissions</button></Link> </td> ) : <td></td>}
+        { user.is_staff ? ( 
+
+          <Dropdown>
+            <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "relative", textAlign: "center", left: "20px", padding: "12.5px"}}>
+              Options
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item className={styles.dropdown_item} href={`/editAssignment/${assignment.id}/${id}`}>Edit Assignment</Dropdown.Item>
+              <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteAssignment([assignment.id,id])}>Delete Assignment</Dropdown.Item>
+              <Dropdown.Item className={styles.dropdown_item_edit} href={`/staff/assignments/${assignment.id}/submissions`}>View Submissions</Dropdown.Item>
+            </Dropdown.Menu>
+              
+          </Dropdown> ) : <td></td>}
      
     </tr>
   );
@@ -297,14 +320,17 @@ const CoursePage = () => {
   })
   return (
     <main className="CoursePage">
-        <article className="lectures">
+        <article className={styles.lectures}>
             { course && 
             <>  
 
-                <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name}'s Lectures </h2>
-                { doIhaveIt === undefined ? <button className="addClass" onClick={() => handleAddCourse(course.id)}>Enroll Class</button> : <button className="removeClass" onClick={() => handleRemoveCourse(course.id)}>Unenroll class</button>}
-                {user.is_staff ? ( <button className="deleteClass" onClick={() => handleDelete(course.id)}>Delete Class</button> ) : null}
-                {user.is_staff ? ( <Link to={`/addLecture/${id}`}><button className="addButton">Add Lecture</button></Link>  ) : null}
+                <h1 class="mb-3 ps-2" style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name.toUpperCase()}
+
+                </h1>
+                <h2 style={{display: "flex", alignItems: "center", justifyContent: "center"}}>Lectures </h2>
+                { doIhaveIt === undefined ? <Button className={styles.enrollClass} onClick={() => handleAddCourse(course.id)}>Enroll Class</Button> : <Button className={styles.unEnrollClass} onClick={() => handleRemoveCourse(course.id)}>Unenroll class</Button>}
+                {user.is_staff ? ( <Button className={styles.deleteClass} onClick={() => handleDelete(course.id)}>Delete Class</Button> ) : null}
+                {user.is_staff ? ( <Link to={`/addLecture/${id}`}><Button className={styles.addLecture}>Add Lecture</Button></Link>  ) : null}
                 <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
@@ -323,7 +349,7 @@ const CoursePage = () => {
             { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Assignments</h2>
-            {user.is_staff ? ( <><Link to={`/addAssignment/${id}`} ><button className="addButton" >Add Assignment</button></Link> </>): null}
+            {user.is_staff ? ( <><Link to={`/addAssignment/${id}`} ><button className={styles.addAssignment} >Add Assignment</button></Link> </>): null}
                 <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>

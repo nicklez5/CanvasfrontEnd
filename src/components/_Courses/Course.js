@@ -1,7 +1,7 @@
 import {React, useEffect,useState} from 'react'
 import {Link} from 'react-router-dom'
 import { useStoreActions } from 'easy-peasy'
-import useAxiosFetch from '../hooks/useAxiosFetch';
+import useAxiosFetch from '../../hooks/useAxiosFetch';
 const Course = ({course}) => {
 
   return (

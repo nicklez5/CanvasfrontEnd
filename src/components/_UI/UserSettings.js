@@ -1,5 +1,5 @@
 import React , {useState,useEffect} from 'react'
-import api from '../api/courses'
+import api from '../../api/courses'
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { useNavigate } from 'react-router-dom'
 import {Container,Form,Button,Spinner,Alert,Row,Col } from "react-bootstrap";

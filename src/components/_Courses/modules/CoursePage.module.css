@@ -1,0 +1,126 @@
+.lectures{
+  background-color: #1D2837;
+  position: relative;
+  border: 1px solid black;
+  padding: 100px;
+  color: white;
+}
+.addLecture{
+  position:relative;
+  display: inline-block;
+  background-color: #286bd8;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  margin-left: 1475px;
+  margin-bottom: 20px;
+  color: black;
+  border-radius: 15px;
+}
+.addLecture:hover{
+    background-color: #286bd8;
+    color: white;
+}
+.addLecture:active{
+    background-color: #FFFFFF;
+    box-shadow: 0 5px #666;
+    transform: translateY(-2px);
+}
+.editLecture{
+  position: relative;
+  margin-left: 20px;
+  right: 40px;
+  padding: 10px;
+  background-color:#339989;
+  border-radius: 15px;
+}
+.dropdown_item:hover {
+  background-color: #3CB35A;
+  color: white;
+}
+.dropdown_item_danger:hover{
+  background-color: #F62F63;
+  color: white;
+}
+.dropdown_item_edit:hover{
+  background-color: #1E293B;
+  color: white;
+}
+.deleteClass{
+  display: inline-block;
+  background-color: red;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  margin-left: 20px;
+  margin-bottom: 0px;
+  color: black;
+  border-radius: 15px;
+  border: 1px solid red;
+}
+.deleteClass:hover{
+    background-color: red;
+    color: white;
+}
+.enrollClass{
+  display: inline-block;
+  background-color: #00B25A;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  color: black;
+  margin-left: 20px;
+  border-radius: 15px;
+  border: 0px solid #00B25A;
+}
+.enrollClass:hover{
+  background-color: #3CB35A;
+  color: white;
+}
+.enrollClass:active{
+  background-color: #3CB35A;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+.unEnrollClass{
+  display: inline-block;
+  border-radius: 15px;
+  margin-left: 20px;
+  padding: 12.5px;
+  background-color: #DA6464;
+  color: black;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  border: 0px solid #DA6464;
+}
+.unEnrollClass:hover{
+  background-color: #DC6E7C;
+  color: white;
+}
+.unEnrollClass:active{
+  background-color: #DC6E7C;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+.addAssignment{
+  position:relative;
+  background-color: #286bd8;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  left: 1775px;
+  margin-bottom: 20px;
+  color: black;
+  border-radius: 15px;
+  border: 0px solid #286bd8;
+}
+.addAssignment:hover{
+  color: white;
+}
+.submitSubmissions{
+  display: inline-block;
+  background-color:#133D5F;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 10px;
+  color: white;
+  border-radius: 15px;
+}
+.submitSubmissions:hover{
+  background-color: #133D5F;
+  color: black;
+}

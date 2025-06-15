@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import styles from "../modules/NewCourse.module.css"
+import styles from "./modules/NewCourse.module.css"
 import {Container,Form,Button,Spinner,Alert,Row,Col } from "react-bootstrap";
 const NewCourse = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { useNavigate, Link , Navigate} from "react-router-dom"
 import Swal from 'sweetalert2';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import Home from './Home';
-import Header from './Header'; 
+import Header from '../Header'; 
 import styled from 'styled-components';
 const LoginPage = () => {
   const navigate = useNavigate()

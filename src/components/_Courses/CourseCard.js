@@ -1,7 +1,7 @@
 // src/components/CourseCard.jsx
 import React,{useState} from "react";
 import PropTypes from "prop-types";
-import styles from "../modules/CourseCard.module.css";
+import styles from "./modules/CourseCard.module.css";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { Spinner } from "react-bootstrap";
 const CourseCard = ({ course, bgVariant = "default", onClick , onViewGrades}) => {
