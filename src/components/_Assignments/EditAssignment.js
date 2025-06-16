@@ -240,7 +240,7 @@ const EditAssignment = () => {
           </Form.Group>
 
           {/* ─── Submit Button ───────────────────────────────────────────────────── */}
-          <Button variant="primary" type="submit" style={{width: "200px", backgroundColor: "white", color: "black", fontFamily: "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif"}} disabled={loading}>
+          <Button variant="danger" type="submit" style={{position: "relative", top: "30px", left:"170px",padding: "15px",width: "200px", backgroundColor: "#DA6464", color: "white", fontFamily: "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif"}} disabled={loading}>
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" className="me-2" />

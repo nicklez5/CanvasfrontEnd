@@ -4,21 +4,22 @@ import { useParams,Link, navigate } from 'react-router-dom';
 import { useStoreState, useStoreActions } from 'easy-peasy'
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
+import { Form, Button, Spinner, Alert,Container } from "react-bootstrap";
 const EditMessage = () => {
   const navigate = useNavigate()
   const {courseID, threadID, messageID} = useParams()
   const fetchMessage = useStoreActions((actions) => actions.messageStore.fetchMessage)
   const updateMessage = useStoreActions((actions) => actions.messageStore.updateMessage)
   const {updateMessageInThread, fetchCourseDetails} = useStoreActions((actions) => actions.courseStore)
-  const { loading, error} =  useStoreState((state) => state.messageStore)
   const message =  useStoreState((state) => state.messageStore.message);
   const [body, setBody] = useState('')
-
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('')
     useEffect(() => {
      if (!messageID) return;
-    // Dispatch the thunk that populates `state.messageStore.message`
+        setLoading(true);
         fetchMessage(messageID);
+        setLoading(false)
     }, [messageID, fetchMessage])
     useEffect(() =>{
      if (message && message.body !== undefined) {
@@ -27,21 +28,26 @@ const EditMessage = () => {
     },[message])
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateMessage({
-        threadId: threadID,
-        messageId: messageID,
-        messageData: { body },
-        courseId: courseID,
-        courseStoreActions: { updateMessageInThread },
+        const result = await updateMessage({
+              threadId: threadID,
+              messageId: messageID,
+              messageData: { body },
+              courseId: courseID,
+              courseStoreActions: { updateMessageInThread },
         });
-        if (!error) {
-        navigate(`/courses/${courseID}`);
-
+        if(result.success){
+          navigate(`/courses/${courseID}`)
+        }else{
+          const err =
+            typeof result.error === "string"
+              ? result.error
+              : JSON.stringify(result.error);
+          setErrorMsg(err);
         }
     };
     return (
-    <div className="container mt-4" style={{paddingBottom: "70vh"}}>
-      <h2 style={{paddingTop: "25vh", position: "relative", left: "50vh", bottom:"25px"}}>Edit Message #{messageID}</h2>
+    <Container className="mt-4" style={{position: "relative" , top: "60px", maxWidth: "800px",padding: "120px", backgroundColor: "#DA6464", marginBottom: "44vh"}}>
+      <h2 style={{left: "150px"}}>Edit Message #{messageID}</h2>
 
       {loading && (
         <div className="d-flex align-items-center my-3">
@@ -50,18 +56,17 @@ const EditMessage = () => {
         </div>
       )}
 
-      {error && (
+      {errorMsg && (
         <Alert variant="danger" className="mt-3">
-          {error}
+          {errorMsg}
         </Alert>
       )}
 
       {!loading && (
         <Form onSubmit={handleSubmit} className="mt-3">
           <Form.Group controlId="messageBody">
-            <Form.Label style={{ position: "relative", left:"55vh"}}>Message Body</Form.Label>
+            <Form.Label>Message Body</Form.Label>
             <Form.Control
-              style={{textAlign: "center", right:"10vh", position: "relative"}}
               as="textarea"
               name="body"
               rows={4}
@@ -72,12 +77,12 @@ const EditMessage = () => {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" disabled={loading} className="mt-3" style={{ width: "40vh", position: "relative", left:"25vh"}}>
+          <Button variant="danger" type="submit" disabled={loading} className="mt-3" style={{ width: "40vh", position: "relative", left:"7.5vh", backgroundColor: "#DA6464", color: "white"}}>
             {loading ? "Saving…" : "Save Changes"}
           </Button>
         </Form>
       )}
-    </div>
+    </Container>
   );
 };
 

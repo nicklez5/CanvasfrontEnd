@@ -114,13 +114,43 @@
 }
 .submitSubmissions{
   display: inline-block;
+  position: sticky;
   background-color:#133D5F;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 10px;
+  left: 12px;
   color: white;
   border-radius: 15px;
 }
 .submitSubmissions:hover{
   background-color: #133D5F;
   color: black;
+}
+.addTest{
+  position:relative;
+  background-color: #286bd8;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  left: 1805px;
+  margin-bottom: 20px;
+  color: black;
+  border-radius: 15px;
+  border: 0px solid #286bd8;
+}
+.addTest:hover{
+  color: white;
+}
+.addThread{
+  position:sticky;
+  background-color: #286bd8;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 12.5px;
+  left: 875px;
+  margin-bottom: 20px;
+  color: black;
+  border-radius: 15px;
+  border: 0px solid #286bd8;
+}
+.addThread:hover{
+  color: white;
 }

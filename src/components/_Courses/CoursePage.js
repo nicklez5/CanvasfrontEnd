@@ -68,7 +68,7 @@ const CoursePage = () => {
 
     if (sub.student_points == null) {
       // Submitted but not graded
-      return <span>Submitted</span>;
+      return <span style={{textAlign: "center"}}>Submitted</span>;
     }
 
     // Graded: show score (or percentage)
@@ -98,7 +98,7 @@ const CoursePage = () => {
 
     // If submission exists but not graded
     if (sub.student_points == null) {
-      return <span>Submitted</span>;
+      return <span style={{textAlign: "center"}}>Submitted</span>;
     }
 
     // If graded
@@ -127,13 +127,14 @@ const CoursePage = () => {
   
   }
   const handleDeleteMessage = async([threadID, messageID, courseID]) => {
-    const success = await deleteMessage({threadId: threadID,messageId: messageID, courseId : courseID, courseStoreActions: { removeMessageFromThread}})
-    if(success){
+    const result = await deleteMessage({threadId: threadID,messageId: messageID, courseId : courseID, courseStoreActions: { removeMessageFromThread}})
+    if(result.success){
       alert("Message deleted succesfully")
-      fetchCourseDetails(id)
     }else{
-      alert("Failed to delete Message " + message_error);
+      const err = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
+      alert(`Failed to Delete Message Error: ${err}`);
     }
+    fetchCourseDetails(id)
   }
   const handleDeleteLecture = async(lectureId) => {
     const success = await deleteLecture({id: course.id,lectureID: lectureId ,courseStoreActions: { removeLectureFromCourse}})
@@ -233,7 +234,20 @@ const CoursePage = () => {
         <td>{date2(test.date_due)}</td>   
         <td>{renderTestStatus(test)}</td>
         <td style={{textAlign: "center"}}><a href={`http://localhost:8000${test.test_file}`} style={{ color: "white" }} target="_blank">{test.test_file}</a></td>
-        <td style={{textAlign: "center"}}>{ user.is_staff && ( <><Link to={`/editTest/${test.id}/${id}`}><button className="editButton">Edit Test</button></Link><button className="deleteButton" onClick={() => handleDeleteTest([test.id,id])}>Delete Test</button> <Link to={`/staff/tests/${test.id}/submissions`}><button className="viewSubmissions">View Submissions</button></Link> </> )}</td>
+        {user.is_staff ?
+          (
+            <Dropdown>
+              <Dropdown.Toggle variant="info" id="dropdown-basic" style={{position: "relative", textAlign: "center", left: "45px", padding:"12.5px"}}>
+                Options
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item className={styles.dropdown_item} href={`/editTest/${test.id}/${id}`}>Edit Test</Dropdown.Item>
+                <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteTest([test.id,id])}>Delete Test</Dropdown.Item>
+                <Dropdown.Item className={styles.dropdown_item_edit} href={`/staff/tests/${test.id}/submissions`}>View Submissions</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          ): <td></td>
+        }
         </tr>
     )
   })
@@ -247,7 +261,7 @@ const CoursePage = () => {
         { user.is_staff ? 
             ( 
             <Dropdown>
-              <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "relative" ,textAlign: "center", left: "55px"}}>
+              <Dropdown.Toggle variant="info" id="dropdown-basic" style={{position: "relative" ,textAlign: "center", left: "55px"}}>
                 Options
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -291,7 +305,7 @@ const CoursePage = () => {
         { user.is_staff ? ( 
 
           <Dropdown>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "relative", textAlign: "center", left: "20px", padding: "12.5px"}}>
+            <Dropdown.Toggle variant="info" id="dropdown-basic" style={{position: "relative", textAlign: "center", left: "20px", padding: "12.5px"}}>
               Options
             </Dropdown.Toggle>
             <Dropdown.Menu>
@@ -324,7 +338,7 @@ const CoursePage = () => {
             { course && 
             <>  
 
-                <h1 class="mb-3 ps-2" style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name.toUpperCase()}
+                <h1 class="mb-5 ps-2" style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>{course.name.toUpperCase()}
 
                 </h1>
                 <h2 style={{display: "flex", alignItems: "center", justifyContent: "center"}}>Lectures </h2>
@@ -372,7 +386,7 @@ const CoursePage = () => {
             { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Tests</h2>
-            {user.is_staff ? ( <><Link to={`/addTest/${id}`} ><button className="addButton" >Add Test</button></Link> </> ) : null}
+            {user.is_staff ? ( <><Link to={`/addTest/${id}`} ><button className={styles.addTest}>Add Test</button></Link> </> ) : null}
                 <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>
@@ -399,7 +413,7 @@ const CoursePage = () => {
       {/* Always show “Create Thread” */}
       <div style={{ margin: "1rem 0", textAlign: "center" }}>
         <Link to={`/addThread/${course.id}`}>
-          <button className="addButton">Create Thread</button>
+          <button className={styles.addThread}>Create Thread</button>
         </Link>
       </div>
 
@@ -412,6 +426,7 @@ const CoursePage = () => {
               <th>Thread ID</th>
               <th>Thread Title</th>
               <th>Thread Created At</th>
+              <th>Thread Author</th>
               <th style={{textAlign: "center"}}>Thread Actions</th>
               <th>Message ID</th>
               <th>Message Body</th>
@@ -431,22 +446,18 @@ const CoursePage = () => {
                       <td>{thread.id}</td>
                       <td>{thread.title}</td>
                       <td>{date2(thread.created_at)}</td>
+                      <td>{thread.author}</td>
                       <td>
-                        <button
-                          className="deleteButton"
-                          onClick={() => handleDeleteThread(thread.id)}
-                        >
-                          Delete Thread
-                        </button>
-                        <button className="editButton">
-                          Edit Thread
-                        </button>
-                        {/* ⬇️ This “Add Message” is specific to this thread */}
-                        <Link to={`/addMessage/${thread.id}/${course.id}`}>
-                          <button className="addMessage" style={{ marginLeft: "0.5rem" }}>
-                            Add Message
-                          </button>
-                        </Link>
+                        <Dropdown>
+                          <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "sticky", textAlign: "center", left: "25px"}}>
+                            Options
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteThread(thread.id)}>Delete Thread</Dropdown.Item>
+                            <Dropdown.Item className={styles.dropdown_item_edit} href={`/editThread/${id}/${thread.id}`}>Edit Thread</Dropdown.Item>
+                            <Dropdown.Item className={styles.dropdown_item} href={`/addMessage/${thread.id}/${id}`}>Add Message</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       </td>
                       {/* No messages to show → just put empty cells for message columns */}
                       <td colSpan={5} style={{ textAlign: "center", color: "#888" }}>
@@ -462,39 +473,33 @@ const CoursePage = () => {
                     <td>{thread.id}</td>
                     <td>{thread.title}</td>
                     <td>{date2(thread.created_at)}</td>
+                    <td>{thread.author}</td>
                     <td>
-                      <button
-                        className="deleteButton"
-                        onClick={() => handleDeleteThread(thread.id)}
-                      >
-                        Delete Thread
-                      </button>
-                      <button className="editButton">
-                        Edit Thread
-                      </button>
-                      {/* “Add Message” for THIS thread */}
-                      <Link to={`/addMessage/${thread.id}/${course.id}`}>
-                        <button className="addMessage" style={{ marginLeft: "0.5rem" }}>
-                          Add Message
-                        </button>
-                      </Link>
+                      <Dropdown>
+                          <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{position: "sticky", textAlign: "center", left: "25px",padding:"12.5px"}}>
+                            Options
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteThread(thread.id)}>Delete Thread</Dropdown.Item>
+                            <Dropdown.Item className={styles.dropdown_item_edit} href={`/editThread/${id}/${thread.id}`}>Edit Thread</Dropdown.Item>
+                            <Dropdown.Item className={styles.dropdown_item} href={`/addMessage/${thread.id}/${id}`}>Add Message</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                     </td>
                     <td>{message.id}</td>
                     <td>{message.body}</td>
                     <td>{message.author}</td>
                     <td>{date2(message.timestamp)}</td>
                     <td>
-                      <Link to={`/editMessage/${course.id}/${thread.id}/${message.id}`}>
-                        <button className="editButton">Edit Message</button>
-                      </Link>
-                      <button
-                        className="deleteButton"
-                        onClick={() =>
-                          handleDeleteMessage([thread.id, message.id, course.id])
-                        }
-                      >
-                        Delete Message
-                      </button>
+                      <Dropdown>
+                        <Dropdown.Toggle variant="info" id="dropdown-basic" style={{position: "sticky", textAlign: "center", left: "25px", padding: "12.5px"}}>
+                          Options
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item className={styles.dropdown_item_edit} href={`/editMessage/${course.id}/${thread.id}/${message.id}`}>Edit Message</Dropdown.Item>
+                          <Dropdown.Item className={styles.dropdown_item_danger} onClick={() => handleDeleteMessage([thread.id,message.id,course.id])}>Delete Message</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </td>
                   </tr>
                 ));

@@ -120,8 +120,8 @@ const EditLecture = () => {
   // ─── Render ─────────────────────────────────────────────────────────────────
   //
   return (
-    <Container className="mt-4" style={{ maxWidth: "800px", padding: "140px", backgroundColor: "#5BC0BE" }}>
-      <h2 style={{left: "150px"}}>Edit Lecture #{lectureID}</h2>
+    <Container className="mt-4" style={{ maxWidth: "800px", padding: "150px", backgroundColor: "#5BC0BE",marginBottom: "34vh"}}>
+      <h2 style={{left: "150px", bottom: "40px"}}>Edit Lecture #{lectureID}</h2>
 
       {/* Show a spinner while we’re fetching the existing lecture */}
       {loading && !lecture && (
@@ -197,7 +197,7 @@ const EditLecture = () => {
           </Form.Group>
 
           {/* 5️⃣ Submit Button */}
-          <Button variant="primary" type="submit" style={{width: "200px", backgroundColor: "white", color: "black", fontFamily: "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif"}}disabled={loading}>
+          <Button variant="info" type="submit" style={{position: "relative", top: "30px", left: "170px", width: "200px", backgroundColor: "black", color: "white", fontFamily: "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif", padding: "15px"}}disabled={loading}>
             {loading ? (
               <>
                 <Spinner animation="border" size="sm" className="me-2" />

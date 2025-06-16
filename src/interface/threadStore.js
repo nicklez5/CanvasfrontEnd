@@ -7,6 +7,7 @@ export const threadStore = {
         list_of_messages: [],
         title: '',
         created_at: "",
+        author: ""
 
     }, 
     loading: false,
@@ -50,9 +51,11 @@ export const threadStore = {
                 updatedThread: response.data
             })
             actions.setError(null)
-            
-        }catch(error){
-            actions.setError(error.message)
+            return { success: true };
+        }catch(err){
+            actions.setError(err.message)
+            console.error("Failed to create Thread:", err);
+            return { success: false, error: err.response?.data || err.message };
         }finally{
             actions.setLoading(false)
         }
@@ -69,8 +72,11 @@ export const threadStore = {
                 updatedThread: response.data
             })
             actions.setError(null)
-        }catch(error){
-            actions.setError(error.message)
+            return { success: true };
+        }catch(err){
+            actions.setError(err.message);
+            console.error("Failed to update Thread:", err);
+            return { success: false, error: err.response?.data || err.message };
         }finally{
             actions.setLoading(false)
         }

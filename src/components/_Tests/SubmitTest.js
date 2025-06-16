@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { Form, Button, Spinner, Alert } from "react-bootstrap";
+import { Form, Button, Spinner, Alert,Container } from "react-bootstrap";
 
 const SubmitTest = () => {
   const { courseID, testID } = useParams();
@@ -17,8 +17,8 @@ const SubmitTest = () => {
   const studentTestGrades = useStoreState(
     (s) => s.submissionStore.studentTestGrades
   );
-  const loading = useStoreState((s) => s.submissionStore.loading);
-  const error   = useStoreState((s) => s.submissionStore.error);
+  const [loading,setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('')
   const studentId = useStoreState((s) => s.userStore.user.pk);
   const [file, setFile] = useState(null);
   const already = studentTestGrades.find((s) => s.test === parseInt(testID, 10));
@@ -45,27 +45,31 @@ const SubmitTest = () => {
     const formData = new FormData();
     formData.append("student_file", file);
     const test_id = parseInt(testID, 10)
+    setLoading(true)
     const result = await createTestSub({ testId: test_id, formData: formData });
-
+    setLoading(false)
     if (result.success) {
-      await fetchStudentTestGrades({ courseID, studentId });
+      await fetchStudentTestGrades({ courseId: courseID, studentId });
       navigate(`/courses/${courseID}`);
+    }else{
+      const err = typeof result.error === "string" ? result.error : JSON.stringify(result.error);
+      setErrorMsg(err)
     }
   };
 
   return (
-    <div className="SubmitTest">
-      <h2>Submit Test #{testID}</h2>
-      {error && <Alert variant="danger">{JSON.stringify(error)}</Alert>}
+    <Container className="mt-4" style={{position: "relative", top: "80px", maxWidth: "800px", padding: "120px",backgroundColor: "#18181B", color: "white", marginBottom:"54vh"}}>
+      <h2 style={{left: "150px", bottom:"40px"}}>Submit Test</h2>
+      {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="fileUpload" className="mb-3">
-          <Form.Label style={{marginLeft: "80px"}}>Upload your test file</Form.Label>
+          <Form.Label>Upload your test file</Form.Label>
           <Form.Control
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
           />
         </Form.Group>
-        <Button variant="primary" type="submit" style={{marginLeft: "120px"}}disabled={loading || !file}>
+        <Button variant="primary" type="submit" style={{position: "relative", width: "200px", backgroundColor: "white", color: "black",top: "30px",left: "170px", fontFamily: "Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif", padding: "15px"}}disabled={loading || !file}>
           {loading ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />
@@ -76,7 +80,7 @@ const SubmitTest = () => {
           )}
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 

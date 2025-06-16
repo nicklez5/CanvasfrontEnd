@@ -27,12 +27,12 @@ export default function ForgotPassword() {
   // If the user already clicked Submit and we got no error, show a confirmation message
   if (submitted && !error) {
     return (
-      <div className="container my-5">
+      <div className="container my-5" style={{paddingBottom:"80vh"}}>
         <div className="row justify-content-center">
           <div className="col-12 col-md-6 col-lg-5">
             <div className="alert alert-success text-center">
               If an account with <strong>{email}</strong> exists, you will receive an
-              email with instructions to reset your password.
+              email(Check your spam folder*) with instructions to reset your password.
             </div>
             <div className="text-center">
               <Link to="/login" className="btn btn-link">
@@ -46,7 +46,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="container my-5" style={{paddingTop: "120px"}}>
+    <div className="container my-5" style={{paddingTop: "150px"}}>
       <div className="row justify-content-center">
         <div className="col-12 col-md-6 col-lg-5">
           <div className="card shadow-sm">

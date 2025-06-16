@@ -91,8 +91,11 @@ export const assignmentStore = { assignment : {
          updatedAssignment: assignment
       })
       actions.setError(null);
+      return { success: true };
     } catch (err) {
       actions.setError(err.message);
+      console.error("Failed to create Assignment:", err);
+      return { success: false, error: err.response?.data || err.message };
     } finally {
       actions.setLoading(false);
     }

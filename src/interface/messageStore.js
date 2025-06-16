@@ -66,9 +66,12 @@ export const messageStore = { message: {
                 updatedMessage: response.data,
             });
 
-            actions.setError(null);  // Clear error
+            actions.setError(null);
+            return { success: true }; // Clear error
         } catch (err) {
             actions.setError(err.message);  // Handle error
+            console.error("Failed to update Message:", err);
+            return { success: false, error: err.response?.data || err.message };
         } finally {
             actions.setLoading(false);
         }
@@ -85,11 +88,11 @@ export const messageStore = { message: {
             actions.setMessage({})
             // Remove the message from the thread in the course state
             actions.setError(null);
-            return true
+            return { success: true };
         } catch (err) {
             console.log(err.message)
             actions.setError(err.message); 
-            return false // Handle error
+            return { success: false, error: err.response?.data || err.message };// Handle error
         } finally {
             actions.setLoading(false);
         }

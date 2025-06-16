@@ -32,6 +32,8 @@ import SubmitTest from './components/_Tests/SubmitTest';
 import StaffTestSubmissions from './components/_Tests/StaffTestSubmissions';
 import StaffAssignmentSubmissions from './components/_Assignments/StaffAssignmentSubmissions';
 import ViewGrades from './components/_UI/ViewGrades';
+import EditThread from './components/_Threads/EditThread';
+import EditTest from './components/_Tests/EditTest';
 // … import all your pages …
 
 const AppWrapper = () => {
@@ -60,6 +62,8 @@ const AppWrapper = () => {
           <Route path="addThread/:id"  element={<NewThread />} />
           <Route path="addMessage/:threadID/:courseID" element={<NewMessage />} />
           <Route path="editMessage/:courseID/:threadID/:messageID" element={<EditMessage/>}/>
+          <Route path="editTest/:testID/:courseID" element={<EditTest/>}/>
+          <Route path="editThread/:courseID/:threadID" element={<EditThread/>}/>
           <Route path="editLecture/:courseID/:lectureID" element={<EditLecture/>}/>
           <Route path="editAssignment/:assignmentID/:courseID" element={<EditAssignment/>}/>
           <Route path="submitAssignment/:courseID/:assignmentID" element={<SubmitAssignment/>}/>

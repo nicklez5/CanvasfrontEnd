@@ -54,13 +54,16 @@ export const testStore = { test : {
     try {
       const response = await api.put(`/tests/update/${updatedData.id}/`, formData)
       actions.setTests(response.data);
-      courseStoreActions.updateTestsInCourse({
+      courseStoreActions.updateTestInCourse({
         courseId: id,   // Pass course_id to ensure it updates the correct course
         updatedTest: response.data,
     });
       actions.setError(null);
+      return { success: true };
     } catch (err) {
       actions.setError(err.message);
+      console.error("Failed to update Test:", err);
+      return { success: false, error: err.response?.data || err.message };
     } finally {
       actions.setLoading(false);
     }
@@ -84,8 +87,11 @@ export const testStore = { test : {
          updatedTest: response.data
       })
       actions.setError(null);
+      return { success: true };
     } catch (err) {
       actions.setError(err.message);
+      console.error("Failed to create Test:", err);
+      return { success: false, error: err.response?.data || err.message };
     } finally {
       actions.setLoading(false);
     }

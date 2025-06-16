@@ -75,15 +75,18 @@ export const lectureStore = { lecture : {
             await api.post(`/courses/lectures/${id}/`, linkData);
 
             if (courseStoreActions && courseStoreActions.addLectureInCourse) {
-            courseStoreActions.addLectureInCourse({
-                courseId: id,
-                updatedLecture: lecture,
-            });
+                courseStoreActions.addLectureInCourse({
+                    courseId: id,
+                    updatedLecture: lecture,
+                });
         }
 
             actions.setError(null);
+            return { success: true };
         } catch (err) {
-            actions.setError(err.message || "Unknown error");
+            actions.setError(err.message);
+            console.error("Failed to update lecture:", err);
+            return { success: false, error: err.response?.data || err.message };
         } finally {
             actions.setLoading(false);
         }
