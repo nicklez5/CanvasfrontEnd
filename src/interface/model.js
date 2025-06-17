@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createStore, action, persist ,thunk, computed} from 'easy-peasy';
 import api from "../api/courses"
 import { PiAlignCenterHorizontalSimple } from 'react-icons/pi';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { assignmentStore } from './assignmentStore';
 import { courseStore } from './courseStore';
 import { lectureStore } from './lectureStore';
