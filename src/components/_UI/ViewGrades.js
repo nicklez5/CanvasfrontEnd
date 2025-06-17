@@ -13,9 +13,9 @@ const ViewGrades = () => {
   const [errorDetails, setError] = useState(null)
   const {courseID} = useParams()
   const student_id = useStoreState((s) => s.userStore.user.pk)
-  const grades = useStoreState((s) => s.submissionStore.myGrades)
-  const assignments = grades["assignments"]
-  const tests = grades["tests"]
+  const grades = useStoreState((s) => s.submissionStore.myGrades) || {};
+  const assignments = grades.assignments || [];
+  const tests = grades.tests || [];
   const fetchMyGrades = useStoreActions((a) => a.submissionStore.fetchMyGrades)
   useEffect(() => {
     console.log(typeof student_id)
