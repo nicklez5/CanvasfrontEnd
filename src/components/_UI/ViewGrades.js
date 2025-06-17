@@ -21,7 +21,8 @@ const ViewGrades = () => {
     console.log(typeof student_id)
     const courseId = parseInt(courseID,10)
     fetchMyGrades({courseID: courseId,student_id: student_id})
-  },[student_id, fetchMyGrades, courseID])
+    console.log(JSON.stringify(grades))
+  },[student_id, fetchMyGrades, courseID,grades])
   const handleFetchAssignmentDetails = async(assignmentId) => {
     setLoading(true)
     setError(null)
