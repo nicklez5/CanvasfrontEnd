@@ -29,8 +29,12 @@ const Register = () => {
   };
 
   return (
-    <Container style={{ maxWidth: "500px" }} className="mt-5">
-      <h2 className="mb-4" style={{color: "white", marginLeft: "150px"}}>Register</h2>
+    <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-8 col-lg-6">
+          <div className="card shadow-sm">
+            <div className="card-body p-4">
+            <h2 className="card-title text-center mb-4">Register</h2>
 
       {error && (
         <Alert variant="danger" className="mb-3">
@@ -38,9 +42,9 @@ const Register = () => {
         </Alert>
       )}
 
-      <Form onSubmit={handleSubmit} style={{color: "white"}}>
+      <Form onSubmit={handleSubmit} style={{position: "relative",color: "black",marginBottom:"3rem", top: "20px"}}>
         {/* Username */}
-        <Form.Group controlId="regUsername" className="mb-3">
+        <Form.Group controlId="regUsername" className="mb-4">
           <Form.Label>Username</Form.Label>
           <Form.Control
             style={{marginLeft: "4px"}}
@@ -53,7 +57,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Email */}
-        <Form.Group controlId="regEmail" className="mb-3">
+        <Form.Group controlId="regEmail" className="mb-4">
           <Form.Label>Email address</Form.Label>
           <Form.Control
             style={{marginLeft: "4px"}}
@@ -66,7 +70,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Password */}
-        <Form.Group controlId="regPassword" className="mb-3">
+        <Form.Group controlId="regPassword" className="mb-4">
           <Form.Label>Password</Form.Label>
           <Form.Control
             style={{marginLeft: "4px"}}
@@ -79,7 +83,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Confirm Password */}
-        <Form.Group controlId="regPassword2" className="mb-3">
+        <Form.Group controlId="regPassword2" className="mb-4">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             style={{marginLeft: "4px"}}
@@ -92,7 +96,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Role Dropdown */}
-        <Form.Group controlId="regRole" className="mb-3">
+        <Form.Group controlId="regRole" className="mb-4">
           <Form.Label>Select Role</Form.Label>
           <Form.Select
             style={{marginLeft: "4px"}}
@@ -106,7 +110,7 @@ const Register = () => {
         </Form.Group>
 
         {/* Submit Button */}
-        <Button variant="primary" type="submit" style={{width: "200px", marginLeft: "140px" }}disabled={loading}>
+        <Button variant="primary" type="submit" style={{marginTop: "2rem",width: "250px", marginLeft: "160px" }}disabled={loading}>
           {loading ? (
             <>
               <Spinner animation="border" size="sm" className="me-2" />
@@ -117,7 +121,11 @@ const Register = () => {
           )}
         </Button>
       </Form>
-    </Container>
+        </div>
+        </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

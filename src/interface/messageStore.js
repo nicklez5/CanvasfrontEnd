@@ -45,9 +45,12 @@ export const messageStore = { message: {
                 message: response.data,  // The new message created in the backend
             });
 
-            actions.setError(null);  // Clear error
+            actions.setError(null);
+            return { success: true };  // Clear error
         } catch (err) {
             actions.setError(err.message);  // Handle error
+            console.error("Failed to update Message:", err);
+            return { success: false, error: err.response?.data || err.message };
         } finally {
             actions.setLoading(false);
         }

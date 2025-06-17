@@ -6,7 +6,8 @@
   overflow:hidden;
   padding: 100px;
   height: 100%;
-  background-image: url("bg.jpg")
+  background-image: url("bg2.jpg");
+  background-size: cover;
 }
 .h1{
   position: relative;

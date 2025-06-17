@@ -88,5 +88,8 @@
   position: fixed;
   margin-top: 10px;
   height: 120vh;
-  background-image: url("bg.jpg")
+  background-image: url("bg2.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

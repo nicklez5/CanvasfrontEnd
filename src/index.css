@@ -6,10 +6,10 @@
   flex-direction: column;
   border: 1px solid #333;
   box-shadow: 0px 0px 15px gray;
-  background-image: url("modules/bg.jpg");
+  background-image: url("modules/bg2.jpg");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size:cover;
   height: 100%;
 }
 body {
