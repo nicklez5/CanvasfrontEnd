@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async() => {
       try{
-        const {list_courses} = canvas.list_courses  
+        const list_courses = canvas.list_courses  
         console.log(list_courses)
       }catch(error) {
         console.error("Error fetching canvas courses:", error);
