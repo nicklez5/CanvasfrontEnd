@@ -32,7 +32,7 @@ export default function ForgotPassword() {
           <div className="col-12 col-md-6 col-lg-5">
             <div className="alert alert-success text-center">
               If an account with <strong>{email}</strong> exists, you will receive an
-              email with instructions to reset your password.
+              email(Check spam folder) with instructions to reset your password.
             </div>
             <div className="text-center">
               <Link to="/login" className="btn btn-link">
