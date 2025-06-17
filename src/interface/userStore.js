@@ -205,7 +205,7 @@ export const userStore = {
             actions.setProfile(profileResponse.data);  // Set profile data in store
 
             // Fetch the user's canvas (list of courses)
-            const canvasResponse = await api.get(`http://localhost:8000/canvas/detail/${user_id}/`);
+            const canvasResponse = await api.get(`/canvas/detail/${user_id}/`);
             actions.setCanvas({list_courses: canvasResponse.data.list_courses, id : canvasResponse.data.id});  // Set canvas (courses) data in store
 
             actions.setError(null);
@@ -290,7 +290,7 @@ export const userStore = {
     fetchUserCourses: thunk(async(actions) => {
         actions.setLoading(true);
         try {
-            const canvasResponse = await api.get(`http://localhost:8000/canvas/detail/${localStorage.getItem("pk")}/`)// Assuming `api` is an Axios instance
+            const canvasResponse = await api.get(`/canvas/detail/${localStorage.getItem("pk")}/`)// Assuming `api` is an Axios instance
             actions.setCanvas({list_courses: canvasResponse.data.list_courses, id : canvasResponse.data.id});  // Clear any previous errors
 
             return canvasResponse.data.list_courses;  // Optionally return the courses here
