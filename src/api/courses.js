@@ -26,28 +26,5 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-api.interceptors.response.use(
-    (response )=> response,
-    (error) => {
-        const allowAnonymous = error.config?.allowAnonymous;
 
-        const authHeader = error.response?.headers?.['www-authenticate'] || '';
-
-        // Expired or invalid token → clear it
-        if (authHeader.includes('invalid_token')) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            store.getActions().user.logout();
-        }
-
-        if (!allowAnonymous && error.response?.status === 401) {
-            store.getActions().user.logout();
-            if (!error.config?.suppressRedirect) {
-                window.location.href = '/';
-            }
-        }
-
-        return Promise.reject(error);
-    }
-)
 export default api;

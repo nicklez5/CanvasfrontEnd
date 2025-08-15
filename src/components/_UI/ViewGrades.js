@@ -79,6 +79,9 @@ const ViewGrades = () => {
         </>
     )
     }
+  const API_BASE = process.env.REACT_APP_API_URL ?? "";
+  const fileUrl = (path) => 
+    !path ? null : (path.startsWith("http") ? path : `${API_BASE}${path}` );
   const date2 = (date) => {
     if(!date) return "Not yet Graded";
     return formatInTimeZone(date, 'UTC', 'MM/dd/yyyy hh:mm a')
@@ -114,6 +117,7 @@ const ViewGrades = () => {
             </thead>
             <tbody>
                 {assignments.map((assignment) => 
+                    
                     <tr key={assignment.id}>
                         <td>
                             <Button
@@ -131,7 +135,7 @@ const ViewGrades = () => {
                         <td>
                             <a 
                             style={{color: "white"}} 
-                            href={`http://localhost:8000${assignment.student_file}`}
+                            href={fileUrl(assignment.student_file)}
                             target="_blank"
                             rel="noopener noreferrer"
                             >{assignment.student_file}</a>
@@ -170,7 +174,7 @@ const ViewGrades = () => {
                             <strong>File: </strong>{" "}
                             <a 
                                 style={{color: "black"}}
-                                href={`${selected.assignment_file}`}
+                                href={fileUrl(selected.assignment_file)}
                                 target="_blank"
                                 rel="noreferrer"
                             >Download</a>
@@ -219,7 +223,7 @@ const ViewGrades = () => {
                             <td>
                                 <a 
                                 style={{color: "white"}}
-                                href={`http://localhost:8000${test.student_file}`}
+                                href={fileUrl(test.student_file)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >{test.student_file}</a>
@@ -258,7 +262,7 @@ const ViewGrades = () => {
                                 <strong>File: </strong>{" "}
                                 <a
                                   style={{color: "black"}}
-                                  href={`${selected.test_file}`}
+                                  href={fileUrl(selected.test_file)}
                                   target="_blank"
                                   rel="noreferrer"
                                 >Download</a>

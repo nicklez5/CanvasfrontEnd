@@ -222,7 +222,9 @@ const CoursePage = () => {
     return `${pct.toFixed(1)}%`;
   };
 
-    
+  const API_BASE = process.env.REACT_APP_API_URL ?? ""; // e.g. https://your-api.onrender.com
+  const fileUrl = (path) =>
+  !path ? null : (path.startsWith("http") ? path : `${API_BASE}${path}`);
   
   const courseTests = course.tests.map((test) => {
     return (
@@ -233,7 +235,7 @@ const CoursePage = () => {
         <td>{test.max_points}</td>
         <td>{date2(test.date_due)}</td>   
         <td>{renderTestStatus(test)}</td>
-        <td style={{textAlign: "center"}}><a href={`http://localhost:8000${test.test_file}`} style={{ color: "white" }} target="_blank">{test.test_file}</a></td>
+        <td style={{textAlign: "center"}}><a href={fileUrl(test.test_file)} style={{ color: "white" }} target="_blank">{test.test_file}</a></td>
         {user.is_staff ?
           (
             <Dropdown>
@@ -257,7 +259,7 @@ const CoursePage = () => {
         <td>{lecture.id}</td>
         <td>{lecture.description}</td>
         <td>{lecture.name}</td>
-        <td style={{textAlign: "center"}}><a href={`http://localhost:8000${lecture.file}`} style={{ color: "white" }} target="_blank">{lecture.file}</a></td>
+        <td style={{textAlign: "center"}}><a href={fileUrl(lecture.file)} style={{ color: "white" }} target="_blank">{lecture.file}</a></td>
         { user.is_staff ? 
             ( 
             <Dropdown>
@@ -295,7 +297,7 @@ const CoursePage = () => {
       <td style={{textAlign: "center"}}>
         <a
           style={{ color: "white" }}
-          href={`http://localhost:8000${assignment.assignment_file}`}
+          href={fileUrl(assignment.assignment_file)}
           target="_blank"
           rel="noopener noreferrer"
         >
