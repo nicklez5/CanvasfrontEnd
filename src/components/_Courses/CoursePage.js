@@ -363,7 +363,7 @@ const CoursePage = () => {
             { course && 
             <>
             <h2 style={{display: "flex" ,alignItems: "center", justifyContent: "center"}}>Assignments</h2>
-            {user.is_staff ? ( <><Link to={`/addAssignment/${id}`} ><button className={styles.addAssignment} >Add Assignment</button></Link> </>): null}
+            {user.is_staff ? ( <><Link to={`/addAssignment/${id}`} ><Button className={styles.addAssignment} >Add Assignment</Button></Link> </>): null}
                 <Table responsive="xl" hover bordered variant="dark">
                     <thead>
                         <tr>

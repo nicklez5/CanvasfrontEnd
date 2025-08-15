@@ -6,10 +6,10 @@
   overflow:hidden;
   padding: 100px;
   height: 100%;
-  background-image: url("bg2.jpg");
+  background-image: url("bg3.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: center;
 }
 .h1{
   position: relative;
