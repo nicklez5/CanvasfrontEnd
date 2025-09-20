@@ -7,7 +7,9 @@
   padding: 100px;
   height: 100%;
   background-image: url("bg3.png");
-  background-size: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .h1{
   position: relative;

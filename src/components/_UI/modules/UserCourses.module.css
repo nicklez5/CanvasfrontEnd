@@ -9,7 +9,7 @@
   background-image: url("bg3.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: center;
+  background-size: cover;
 }
 .h1{
   position: relative;
